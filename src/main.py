@@ -1,4 +1,4 @@
-from ProcessSimulator.Programs import *
+from textSection import TextSection
 
 a = TextSection(0)
 print(a)

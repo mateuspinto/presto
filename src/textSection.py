@@ -1,10 +1,3 @@
-class ProgramList(object):
-    """
-    docstring
-    """
-    pass
-
-
 class TextSection(object):
     """
     The text section of a program. Contains a list of instructions.
