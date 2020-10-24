@@ -1,12 +1,10 @@
-from textSection import TextSection
+from ProcessTable import ProcessTable
 
-a = TextSection(0)
+a = ProcessTable()
+a.appendProcess(4, 0, 4, 3)
+
+print("Tabela de processos:")
 print(a)
 
-print("Fork da primeira instrução até a segunda")
-b = a.fork(1,2)
-print(b)
-
-print("Replace por 1")
-b.replace(1)
-print(b)
+print("Código do processo 0")
+a.printTextSection(0)
