@@ -1,10 +1,3 @@
-class ProgramList(object):
-    """
-    docstring
-    """
-    pass
-
-
 class TextSection(object):
     """
     The text section of a program. Contains a list of instructions.
@@ -57,8 +50,7 @@ class TextSection(object):
         return display[:-1]
 
     def fork(self, fromLine: int, howManyLines: int):
-        self.__read_file__(self.fileNumber, True, fromLine,
-                           fromLine + howManyLines - 1)
+        return TextSection(self.fileNumber, True, fromLine, fromLine + howManyLines - 1)
 
     def replace(self, newFileNumber: int):
         self.__read_file__(newFileNumber)
