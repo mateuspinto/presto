@@ -19,5 +19,8 @@ class MemoryItem(object):
 
         self.value = value
 
+    def increase(self):
+        self.value += 1
+
     def __str__(self):
         return str(self.declared) + " " + str(self.value)

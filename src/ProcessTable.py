@@ -5,24 +5,45 @@ class ProcessTable(object):
     """
     Table containing processes
     """
+
     def __init__(self):
         self.table = []
 
     def appendProcess(self, fpid: int, fileNumber: int, priority: int, initTime: int, limit: bool = False, startLine: int = 0, endLine: int = 0):
-        self.table.append(ProcessTableItem(fpid, fileNumber, priority, initTime, limit, startLine, endLine))
+        self.table.append(ProcessTableItem(fpid, fileNumber,
+                                           priority, initTime, limit, startLine, endLine))
 
-    def dropProcess(self, pid: int):
+    def popProcess(self, pid: int):
         self.table.pop(pid)
 
     def __str__(self):
-        display = "PID | FPID | VAR | PRI | INT | CPT\n"
-        for pid, process in enumerate(self.table, 1):
+        display = "PID | FPID | PC  | VAR | PRI | INT | CPT\n"
+        for pid, process in enumerate(self.table, 0):
             display += str(pid).zfill(3) + " | " + str(process) + "\n"
 
         return display[:-1]
 
     def printTextSection(self, pid: int):
         self.table[pid].printTextSection()
+
+    def setVariables(self, pid: int, variables: int):
+        self.table[pid].variables = variables
+
+    def increaseCPUTime(self, pid: int):
+        self.table[pid].cpuTime += 1
+
+    def fork(self, pid: int, howManyLines: int, time: int):
+        self.appendProcess(
+            pid, self.table[pid].code.fileNumber, self.table[pid].priority, time, True, self.getPC(pid), self.getPC(pid) + howManyLines - 1)
+
+    def replaceTextSection(self, pid: int, newFileNumber: int):
+        self.table[pid].replaceTextSection(newFileNumber)
+
+    def getPC(self, pid: int):
+        return self.table[pid].pc
+
+    def increasePC(self, pid: int):
+        self.table[pid].increasePC()
 
 
 class ProcessTableItem(object):
@@ -37,9 +58,10 @@ class ProcessTableItem(object):
         self.priority = priority
         self.initTime = initTime
         self.cpuTime = 0
+        self.pc = 0
 
     def __str__(self):
-        return str(self.fpid).zfill(4) + " | " + str(self.variables).zfill(3) + " | " + str(self.priority).zfill(3) + " | " + str(self.initTime).zfill(3) + " | " + str(self.cpuTime).zfill(3)
+        return str(self.fpid).zfill(4) + " | " + str(self.pc).zfill(3) + " | " + str(self.variables).zfill(3) + " | " + str(self.priority).zfill(3) + " | " + str(self.initTime).zfill(3) + " | " + str(self.cpuTime).zfill(3)
 
     def setVariables(self, variables: int):
         self.variables = variables
@@ -47,8 +69,17 @@ class ProcessTableItem(object):
     def setPriority(self, priority: int):
         self.priority = priority
 
-    def increaseCPUTime(self, cpuTimeElapsed: int):
-        self.cpuTime += cpuTimeElapsed
+    def increaseCPUTime(self):
+        self.cpuTime += 1
 
     def printTextSection(self):
         print(self.code)
+
+    def replaceTextSection(self, newFileNumber: int):
+        self.code.replace(newFileNumber)
+
+    def getPC(self):
+        return self.pc
+
+    def increasePC(self):
+        self.pc += 1

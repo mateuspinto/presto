@@ -9,19 +9,21 @@ class VirtualMemory(object):
     def __init__(self):
         self.memory = {}
 
-    def appendProcess(self, pid: int, numberOfVariables: int):
+    def appendProcess(self, pid: int, numberOfVariables: int) -> int:
         self.memory[pid] = []
 
         for _i in range(numberOfVariables):
             self.memory[pid].append(MemoryItem())
 
+        return 0
+
     def __str__(self):
         display = ""
         for key in self.memory:
-            display+= str(key) + " - "
+            display += "{" + str(key).zfill(3) + "} "
             for item in self.memory[key]:
                 display += str(item) + " "
-            display+="\n"
+            display += "\n"
 
         return display[:-1]
 

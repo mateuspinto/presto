@@ -49,9 +49,6 @@ class TextSection(object):
 
         return display[:-1]
 
-    def fork(self, fromLine: int, howManyLines: int):
-        return TextSection(self.fileNumber, True, fromLine, fromLine + howManyLines - 1)
-
     def replace(self, newFileNumber: int):
         self.__read_file__(newFileNumber)
 
