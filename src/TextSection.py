@@ -52,6 +52,9 @@ class TextSection(object):
     def replace(self, newFileNumber: int):
         self.__read_file__(newFileNumber)
 
+    def getInstruction(self, line: int):
+        return self.code[line]
+
 
 class Instruction(object):
     """

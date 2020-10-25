@@ -45,6 +45,9 @@ class ProcessTable(object):
     def increasePC(self, pid: int):
         self.table[pid].increasePC()
 
+    def getInstruction(self, pid: int, line: int):
+        return self.table[pid].getInstruction(line)
+
 
 class ProcessTableItem(object):
     """
@@ -83,3 +86,6 @@ class ProcessTableItem(object):
 
     def increasePC(self):
         self.pc += 1
+
+    def getInstruction(self, line: int):
+        return self.code.getInstruction(line)

@@ -85,3 +85,37 @@ class Processor(object):
         processTable.increaseCPUTime(pid)
 
         processTable.replaceTextSection(pid, newFileNumber)
+
+    @staticmethod
+    def runSpecificInstruction(pid: int, line: int, time: int, memory, processTable, runningQueue, readyQueue, blockedQueue):
+
+        instruction = processTable.getInstruction(pid, line)
+        opcode: str = instruction.opcode
+        n: int = instruction.n
+        x: int = instruction.x
+
+        if opcode == "N":
+            Processor.allocMemory(pid, n, memory, processTable)
+        elif opcode == "D":
+            Processor.declare(pid, n, memory, processTable)
+        elif opcode == "V":
+            Processor.setValue(pid, n, x, memory, processTable)
+        elif opcode == "A":
+            Processor.addValue(pid, n, x, memory, processTable)
+        elif opcode == "S":
+            Processor.subValue(pid, n, x, memory, processTable)
+        elif opcode == "B":
+            Processor.blockProcess(pid, memory, processTable, runningQueue, blockedQueue)
+        elif opcode == "T":
+            Processor.terminateProcess(pid, memory, processTable, runningQueue)
+        elif opcode == "F":
+            Processor.forkProcess(pid, n, time, memory, processTable, readyQueue)
+        elif opcode == "R":
+            Processor.replaceProcessImage(pid, n, memory, processTable)
+        else:
+            pass
+
+    @staticmethod
+    def runInstruction(pid: int, time: int, memory, processTable, runningQueue, readyQueue, blockedQueue):
+        
+        Processor.runSpecificInstruction(pid, processTable.getPC(pid), time, memory, processTable, runningQueue, readyQueue, blockedQueue)
