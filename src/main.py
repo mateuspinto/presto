@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from ProcessTable import ProcessTable
 from VirtualMemory import VirtualMemory
 from Processor import Processor
