@@ -19,7 +19,7 @@ class ProcessTable(object):
     def __str__(self):
         display = "[Process Table]\n"
         display += "PID | FPID | PC  | VAR | PRI | INT | CPT\n"
-        
+
         for pid, process in enumerate(self.table, 0):
             display += str(pid).zfill(3) + " | " + str(process) + "\n"
 

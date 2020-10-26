@@ -8,7 +8,7 @@ class FirstInFirstOutScheduler(object):
 
     @staticmethod
     def getOldestPID(readyQueue, processTable) -> int:
-
+        # TODO: refactor function
         ready_pid_time = []
 
         for elem in readyQueue.queue:
@@ -20,8 +20,8 @@ class FirstInFirstOutScheduler(object):
 
         while ((runningQueue.len()) < self.numberOfCores) and (not readyQueue.isEmpty()):
 
-            pid_to_be_add = FirstInFirstOutScheduler.getOldestPID(
+            pid_to_be_scheduled = FirstInFirstOutScheduler.getOldestPID(
                 readyQueue, processTable)
-            print("VAI BOCETAO + " + str(pid_to_be_add))
-            readyQueue.popProcess(pid_to_be_add)
-            runningQueue.appendProcess(pid_to_be_add)
+
+            readyQueue.popProcess(pid_to_be_scheduled)
+            runningQueue.appendProcess(pid_to_be_scheduled)
