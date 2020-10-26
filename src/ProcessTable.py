@@ -38,6 +38,8 @@ class ProcessTable(object):
         self.appendProcess(
             pid, self.table[pid].code.fileNumber, self.table[pid].priority, time, True, self.getPC(pid), self.getPC(pid) + howManyLines - 1)
 
+        return len(self.table) - 1
+
     def replaceTextSection(self, pid: int, newFileNumber: int):
         self.table[pid].replaceTextSection(newFileNumber)
 
@@ -49,6 +51,15 @@ class ProcessTable(object):
 
     def getInstruction(self, pid: int, line: int):
         return self.table[pid].getInstruction(line)
+
+    def getInitTime(self, pid: int):
+        return self.table[pid].getInitTime()
+
+    def newPID(self):
+        return len(self.table)
+
+    def resetPC(self, pid: int):
+        self.table[pid].resetPC()
 
 
 class ProcessTableItem(object):
@@ -91,3 +102,9 @@ class ProcessTableItem(object):
 
     def getInstruction(self, line: int):
         return self.code.getInstruction(line)
+
+    def getInitTime(self):
+        return self.initTime
+
+    def resetPC(self):
+        self.pc = 0

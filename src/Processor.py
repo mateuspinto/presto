@@ -12,8 +12,11 @@ class Processor(object):
         processTable.increasePC(pid)
         processTable.increaseCPUTime(pid)
 
-        processTable.setVariables(
-            pid, memory.appendProcess(pid, numberOfVariables))
+        memory_index = memory.appendProcess(pid, numberOfVariables)
+
+        processTable.setVariables(pid, memory_index)
+
+        print("Memory index = " + str(memory_index))
 
     @staticmethod
     def declare(pid: int, variableNumber: int, memory, processTable):
@@ -63,9 +66,10 @@ class Processor(object):
         blockedQueue.appendProcess(pid)
 
     @staticmethod
-    def terminateProcess(pid: int, memory, processTable, runningQueue):
+    def terminateProcess(pid: int, memory, processTable, runningQueue, doneQueue):
 
         runningQueue.popProcess(pid)
+        doneQueue.appendProcess(pid)
         
         #memory.popProcess(pid)
         #processTable.popProcess(pid)
@@ -76,19 +80,19 @@ class Processor(object):
         processTable.increasePC(pid, howManyLines+1)
         processTable.increaseCPUTime(pid)
 
-        readyQueue.appendProcess(pid+1)
-        processTable.fork(pid, howManyLines, initialTime)
+        son_PID:int = processTable.fork(pid, howManyLines, initialTime)
+        readyQueue.appendProcess(son_PID)
 
     @staticmethod
     def replaceProcessImage(pid: int, newFileNumber: int, memory, processTable):
 
-        processTable.increasePC(pid)
         processTable.increaseCPUTime(pid)
 
         processTable.replaceTextSection(pid, newFileNumber)
+        processTable.resetPC(pid)
 
     @staticmethod
-    def runSpecificInstruction(pid: int, line: int, time: int, memory, processTable, runningQueue, readyQueue, blockedQueue):
+    def runSpecificInstruction(pid: int, line: int, time: int, memory, processTable, runningQueue, readyQueue, blockedQueue, doneQueue):
 
         instruction = processTable.getInstruction(pid, line)
         opcode: str = instruction.opcode
@@ -108,7 +112,7 @@ class Processor(object):
         elif opcode == "B":
             Processor.blockProcess(pid, memory, processTable, runningQueue, blockedQueue)
         elif opcode == "T":
-            Processor.terminateProcess(pid, memory, processTable, runningQueue)
+            Processor.terminateProcess(pid, memory, processTable, runningQueue, doneQueue)
         elif opcode == "F":
             Processor.forkProcess(pid, n, time, memory, processTable, readyQueue)
         elif opcode == "R":
@@ -117,6 +121,6 @@ class Processor(object):
             pass
 
     @staticmethod
-    def runInstruction(pid: int, time: int, memory, processTable, runningQueue, readyQueue, blockedQueue):
+    def runInstruction(pid: int, time: int, memory, processTable, runningQueue, readyQueue, blockedQueue, doneQueue):
         
-        Processor.runSpecificInstruction(pid, processTable.getPC(pid), time, memory, processTable, runningQueue, readyQueue, blockedQueue)
+        Processor.runSpecificInstruction(pid, processTable.getPC(pid), time, memory, processTable, runningQueue, readyQueue, blockedQueue, doneQueue)
