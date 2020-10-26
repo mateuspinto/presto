@@ -23,4 +23,7 @@ class MemoryItem(object):
         self.value = value
 
     def __str__(self):
-        return str(self.declared) + " " + str(self.value)
+        if self.declare:
+            return "|" + str(self.value).zfill(3) + "|"
+        else:
+            return " " + str(self.value).zfill(3) + " "

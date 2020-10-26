@@ -22,9 +22,9 @@ class VirtualMemory(object):
         display = "[Virtual Memory]\n"
 
         for key in self.memory:
-            display += "PID = " + str(key).zfill(3) + " >>> | "
+            display += "PID = " + str(key).zfill(3) + " >>> "
             for item in self.memory[key]:
-                display += str(item) + " | "
+                display += str(item) + " "
             display += "\n"
 
         return display[:-1]
