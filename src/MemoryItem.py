@@ -1,16 +1,19 @@
 class MemoryItem(object):
     """
-    A generic item of memory
+    A generic item of memory. Contains the value (int) and the declared status (bool).
     """
 
     def __init__(self):
-        self.value = 0
-        self.declared = False
+        self.value: int = 0
+        self.declared: bool = False
 
     def declare(self):
         self.declared = True
 
     def getValue(self) -> int:
+        if not self.declared:
+            raise NameError("Variable not declared!")
+
         return self.value
 
     def setValue(self, value: int):
@@ -18,9 +21,6 @@ class MemoryItem(object):
             raise NameError("Variable not declared!")
 
         self.value = value
-
-    def increase(self):
-        self.value += 1
 
     def __str__(self):
         return str(self.declared) + " " + str(self.value)

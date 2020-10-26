@@ -3,7 +3,8 @@ from MemoryItem import MemoryItem
 
 class VirtualMemory(object):
     """
-    A simple virtual memory
+    A simple virtual memory implemented with a dict of lists. Each dict entry is a process.
+    Each variable of the vectors are variable of the processes
     """
 
     def __init__(self):
@@ -18,11 +19,12 @@ class VirtualMemory(object):
         return 0
 
     def __str__(self):
-        display = ""
+        display = "[Virtual Memory]\n"
+
         for key in self.memory:
-            display += "{" + str(key).zfill(3) + "} "
+            display += "PID = " + str(key).zfill(3) + " >>> | "
             for item in self.memory[key]:
-                display += str(item) + " "
+                display += str(item) + " | "
             display += "\n"
 
         return display[:-1]

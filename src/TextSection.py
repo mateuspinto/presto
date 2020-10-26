@@ -3,34 +3,41 @@ class TextSection(object):
     The text section of a program. Contains a list of instructions.
     """
 
-    def __read_file__(self, fileNumber: int, limit: bool = False, startLine: int = 0, endLine: int = 0):
+    def __read_file__(self, fileNumber: int, limited: bool = False, startLine: int = 0, endLine: int = 0):
         self.code = []
         self.fileNumber = fileNumber
 
         with open("programs/" + str(fileNumber) + ".txt") as file:
 
             if fileNumber < 0:
-                raise NameError("fileNumber must be a unsigned int!")
+                raise NameError(
+                    "fileNumber must be an integer greater or equals to zero!")
 
             for line_number, line in enumerate(file, 1):
 
-                if not limit or startLine <= line_number <= endLine:
+                if (not limited) or (startLine <= line_number <= endLine) or line.startswith('#'):
 
-                    try:
-                        opcode = str(line.strip().split(' ')[0])
-                    except:
+                    opcode = str(line.strip().split(' ')[0])
+                    n = 0
+                    x = 0
+
+                    if not Instruction.isOpcodeValid(opcode):
                         raise NameError(
-                            "Wrong syntax! Bad opcode! Error on line " + str(line_number))
+                            "Wrong syntax! Opcode invalid! Error on line " + str(line_number))
 
-                    try:
-                        n = int(line.strip().split(' ')[1])
-                    except:
-                        n = 0
+                    if Instruction.doesOpcodeHaveN(opcode):
+                        try:
+                            n = int(line.strip().split(' ')[1])
+                        except:
+                            raise NameError(
+                                "Wrong syntax! Opcode " + opcode + " requires the argument N, that was not given! Error on line " + str(line_number))
 
-                    try:
-                        x = int(line.strip().split(' ')[2])
-                    except:
-                        x = 0
+                    if Instruction.doesOpcodeHaveX(opcode):
+                        try:
+                            x = int(line.strip().split(' ')[2])
+                        except:
+                            raise NameError(
+                                "Wrong syntax! Opcode " + opcode + " requires the argument X, that was not given! Error on line " + str(line_number))
 
                     try:
                         self.code.append(Instruction(opcode, n, x))
@@ -38,11 +45,11 @@ class TextSection(object):
                         raise NameError(
                             "Wrong syntax! Error on line = " + str(line_number))
 
-    def __init__(self, fileNumber: int, limit: bool = False, startLine: int = 0, endLine: int = 0):
-        self.__read_file__(fileNumber, limit, startLine, endLine)
+    def __init__(self, fileNumber: int, limited: bool = False, startLine: int = 0, endLine: int = 0):
+        self.__read_file__(fileNumber, limited, startLine, endLine)
 
     def __str__(self):
-        display: str = ''
+        display: str = '[Text section]\n'
 
         for instruction in self.code:
             display += str(instruction) + '\n'
@@ -61,13 +68,63 @@ class Instruction(object):
     One instruction to be emulated by the simulator.
     """
 
-    def __init__(self, opcode: str, n: int, x: int):
+    @staticmethod
+    def isOpcodeValid(opcode: str) -> bool:
+        """
+        Check if a opcode is valid
+        """
 
-        if not (opcode == 'N' or opcode == 'D' or opcode == 'V' or opcode == 'A' or opcode == 'S' or opcode == 'B' or opcode == 'T' or opcode == 'F' or opcode == 'R'):
+        if opcode in ['N', 'D', 'V', 'A', 'S', 'B', 'T', 'F', 'R']:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def doesOpcodeHaveN(opcode: str) -> bool:
+        """
+        Check if a opcode requires the N field
+        """
+
+        if opcode in ['B', 'T']:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def doesOpcodeHaveX(opcode: str) -> bool:
+        """
+        Check if a opcode requires the X field
+        """
+
+        if opcode in ['B', 'T', 'N', 'D', 'F', 'R']:
+            return False
+        else:
+            return True
+
+    def hasN(self) -> bool:
+        """
+        Check if the instruction requires the N field
+        """
+
+        return Instruction.doesOpcodeHaveN(self.opcode)
+
+    def hasX(self) -> bool:
+        """
+        Check if the instruction requires the X field
+        """
+
+        return Instruction.doesOpcodeHaveX(self.opcode)
+
+    def __init__(self, opcode: str, n: int, x: int):
+        """
+        Object constructor. Check if the opcode is valid and if N is an unsigned int
+        """
+
+        if not Instruction.isOpcodeValid(opcode):
             raise NameError("Opcode is not valid!")
 
         if n < 0:
-            raise NameError("N must be an unsigned int!")
+            raise NameError("N must be greater or equals to zero!")
 
         self.opcode = opcode
         self.n = n
@@ -76,10 +133,10 @@ class Instruction(object):
     def __str__(self):
         display: str = self.opcode
 
-        if not (self.opcode == 'B' or self.opcode == 'T'):
+        if self.hasN():
             display += ' ' + str(self.n)
 
-            if not (self.opcode == 'N' or self.opcode == 'D' or self.opcode == 'F' or self.opcode == 'R'):
-                display += ' ' + str(self.x)
+        if self.hasX():
+            display += ' ' + str(self.x)
 
         return display

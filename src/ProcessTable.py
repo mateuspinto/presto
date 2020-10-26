@@ -17,7 +17,9 @@ class ProcessTable(object):
         self.table.pop(pid)
 
     def __str__(self):
-        display = "PID | FPID | PC  | VAR | PRI | INT | CPT\n"
+        display = "[Process Table]\n"
+        display += "PID | FPID | PC  | VAR | PRI | INT | CPT\n"
+        
         for pid, process in enumerate(self.table, 0):
             display += str(pid).zfill(3) + " | " + str(process) + "\n"
 
@@ -42,8 +44,8 @@ class ProcessTable(object):
     def getPC(self, pid: int):
         return self.table[pid].pc
 
-    def increasePC(self, pid: int):
-        self.table[pid].increasePC()
+    def increasePC(self, pid: int, count: int = 1):
+        self.table[pid].increasePC(count)
 
     def getInstruction(self, pid: int, line: int):
         return self.table[pid].getInstruction(line)
@@ -84,8 +86,8 @@ class ProcessTableItem(object):
     def getPC(self):
         return self.pc
 
-    def increasePC(self):
-        self.pc += 1
+    def increasePC(self, count: id = 1):
+        self.pc += count
 
     def getInstruction(self, line: int):
         return self.code.getInstruction(line)

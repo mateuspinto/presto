@@ -1,12 +1,12 @@
 class Processor(object):
     """
-    A simple processor for the simulated language 
+    A simple processor for the simulated language. Acts like a static class. There is no initializer or attributes.
     """
 
     @staticmethod
     def allocMemory(pid: int, numberOfVariables: int, memory, processTable):
         """
-        Alloc some memory for the process
+        Alloc some memory for the process.
         """
 
         processTable.increasePC(pid)
@@ -18,7 +18,7 @@ class Processor(object):
     @staticmethod
     def declare(pid: int, variableNumber: int, memory, processTable):
         """
-        Declare some variable of the process
+        Declare a variable of the process, to be used later.
         """
 
         processTable.increasePC(pid)
@@ -66,13 +66,14 @@ class Processor(object):
     def terminateProcess(pid: int, memory, processTable, runningQueue):
 
         runningQueue.popProcess(pid)
-        memory.popProcess(pid)
-        processTable.popProcess(pid)
+        
+        #memory.popProcess(pid)
+        #processTable.popProcess(pid)
 
     @staticmethod
     def forkProcess(pid: int, howManyLines: int, initialTime: int, memory, processTable, readyQueue):
 
-        processTable.increasePC(pid)
+        processTable.increasePC(pid, howManyLines+1)
         processTable.increaseCPUTime(pid)
 
         readyQueue.appendProcess(pid+1)
