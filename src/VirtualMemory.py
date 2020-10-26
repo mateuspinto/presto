@@ -4,13 +4,16 @@ from MemoryItem import MemoryItem
 class VirtualMemory(object):
     """
     A simple virtual memory implemented with a dict of lists. Each dict entry is a process.
-    Each variable of the vectors are variable of the processes
+    Each variable of the vectors are variables of the processes.
     """
 
     def __init__(self):
         self.memory = {}
 
     def appendProcess(self, pid: int, numberOfVariables: int) -> int:
+        """
+        Append a new process and return the memory offset (always zero).
+        """
         self.memory[pid] = []
 
         for _i in range(numberOfVariables):
@@ -40,3 +43,9 @@ class VirtualMemory(object):
 
     def setValue(self, pid: int, variableNumber: int, value: int):
         self.memory[pid][variableNumber].setValue(value)
+
+    def moveToVirtualMemory(self, pid: int, virtualMemory):
+        """
+        Move all variables to virtual memory for final print
+        """
+        pass
