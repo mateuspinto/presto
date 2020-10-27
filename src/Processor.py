@@ -107,7 +107,7 @@ class Processor(object):
         processTable.resetPC(pid)
 
     @staticmethod
-    def runSpecificInstruction(pid: int, line: int, time: int, memory, virtualMemoy, processTable, runningList, readyList, blockedIOList, blockedMmList, doneList):
+    def runSpecificInstruction(pid: int, line: int, time: int, memory, infinityMemoy, processTable, runningList, readyList, blockedIOList, blockedMmList, doneList):
 
         instruction = processTable.getInstruction(pid, line)
         opcode: str = instruction.opcode
@@ -129,7 +129,7 @@ class Processor(object):
                 pid, memory, processTable, runningList, blockedIOList)
         elif opcode == "T":
             Processor.terminateProcess(
-                pid, memory, virtualMemoy, processTable, runningList, doneList)
+                pid, memory, infinityMemoy, processTable, runningList, doneList)
         elif opcode == "F":
             Processor.forkProcess(pid, n, time, memory,
                                   processTable, readyList)
