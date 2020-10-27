@@ -1,20 +1,64 @@
 class Processor(object):
     """
-    A simple processor for the simulated language. Acts like a static class. There is no initializer or attributes.
+    A simple processor for the simulated language.
     """
 
-    @staticmethod
-    def allocMemory(pid: int, numberOfVariables: int, memory, processTable, runningList, blockedMmList):
+    def __init__(self, numberOfCores: int = 1):
+        self.numberOfCores = numberOfCores
+        self.threads = []
+
+    def getNumberOfCores(self):
+        return self.numberOfCores
+
+    def getNumberOfProcess(self):
+        return len(self.threads)
+
+    def __str__(self):
+        display = "[Processor]\n"
+        display += "Core count = " + str(self.numberOfCores) + "\n"
+
+        display += "PID | TIM"
+        for i in self.threads:
+            display += "\n" + str(i)
+
+        return display
+
+    def isFull(self):
+        return self.numberOfCores == len(self.threads)
+
+    def isEmpty(self):
+        return len(self.threads) == 0
+
+    def appendProcess(self, pid: int):
+        self.threads.append(ProcessorEntry(pid))
+
+    def removeProcess(self, pid: int):
+        self.threads.remove(pid)
+
+    def getQuantum(self, pid: int):
+        return self.threads[self.threads.index(pid)].getQuantum()
+
+    def increaseQuantum(self, pid: int, quantum: int = 1):
+        return self.threads[self.threads.index(pid)].increaseQuantum(quantum)
+
+    def runInstructions(self, time: int, memory, infinityMemory, processTable, scheduler, blockedIOList, blockedMmList, doneList):
+        for thread in self.threads:
+
+            self.increaseQuantum(thread.getPID())
+            self.runInstruction(thread.getPID(), time, memory, infinityMemory,
+                                processTable, scheduler, blockedIOList, blockedMmList, doneList)
+
+    def allocMemory(self, pid: int, numberOfVariables: int, memory, processTable, blockedMmList):
         """
         Alloc some memory for the process.
         """
 
         memory_index = memory.appendProcess(pid, numberOfVariables)
-        
-        if memory_index <0: # Index -1 means the memory allocation failed
 
-            Processor.blockProcessByMemory(
-                pid, processTable, runningList, blockedMmList)
+        if memory_index < 0:  # Index -1 means the memory allocation failed
+
+            self.blockProcessByMemory(
+                pid, processTable, blockedMmList)
         else:
 
             processTable.increasePC(pid)
@@ -62,41 +106,37 @@ class Processor(object):
         memory.setValue(pid, variableNumber,
                         memory.getValue(pid, variableNumber) - x)
 
-    @staticmethod
-    def blockProcessByIO(pid: int, memory, processTable, runningList, blockedIOList):
+    def blockProcessByIO(self, pid: int, memory, processTable, blockedIOList):
 
         processTable.increasePC(pid)
         processTable.increaseCPUTime(pid)
 
-        runningList.removeProcess(pid)
+        self.removeProcess(pid)
         blockedIOList.appendProcess(pid)
 
-    @staticmethod
-    def blockProcessByMemory(pid: int, processTable, runningList, blockedMmList):
+    def blockProcessByMemory(self, pid: int, processTable, blockedMmList):
         """
         Exception handler for non allocated memory
         """
 
-        runningList.removeProcess(pid)
+        self.removeProcess(pid)
         blockedMmList.appendProcess(pid)
 
-    @staticmethod
-    def terminateProcess(pid: int, memory, infinityMemory, processTable, runningList, doneList):
+    def terminateProcess(self, pid: int, memory, infinityMemory, processTable, doneList):
 
-        runningList.removeProcess(pid)
+        self.removeProcess(pid)
         doneList.appendProcess(pid)
 
         memory.moveToInfinityMemory(pid, infinityMemory)
 
-
     @staticmethod
-    def forkProcess(pid: int, howManyLines: int, initialTime: int, memory, processTable, readyList):
+    def forkProcess(pid: int, howManyLines: int, initialTime: int, memory, processTable, scheduler):
 
         processTable.increasePC(pid, howManyLines+1)
         processTable.increaseCPUTime(pid)
 
         son_PID: int = processTable.fork(pid, howManyLines, initialTime)
-        readyList.appendProcess(son_PID)
+        scheduler.addReadyProcess(son_PID)
 
     @staticmethod
     def replaceProcessImage(pid: int, newFileNumber: int, memory, processTable):
@@ -106,8 +146,7 @@ class Processor(object):
         processTable.replaceTextSection(pid, newFileNumber)
         processTable.resetPC(pid)
 
-    @staticmethod
-    def runSpecificInstruction(pid: int, line: int, time: int, memory, infinityMemoy, processTable, runningList, readyList, blockedIOList, blockedMmList, doneList):
+    def runSpecificInstruction(self, pid: int, line: int, time: int, memory, infinityMemoy, processTable, scheduler, blockedIOList, blockedMmList, doneList):
 
         instruction = processTable.getInstruction(pid, line)
         opcode: str = instruction.opcode
@@ -115,7 +154,8 @@ class Processor(object):
         x: int = instruction.x
 
         if opcode == "N":
-            Processor.allocMemory(pid, n, memory, processTable, runningList, blockedMmList)
+            self.allocMemory(
+                pid, n, memory, processTable, blockedMmList)
         elif opcode == "D":
             Processor.declare(pid, n, memory, processTable)
         elif opcode == "V":
@@ -125,21 +165,45 @@ class Processor(object):
         elif opcode == "S":
             Processor.subValue(pid, n, x, memory, processTable)
         elif opcode == "B":
-            Processor.blockProcessByIO(
-                pid, memory, processTable, runningList, blockedIOList)
+            self.blockProcessByIO(
+                pid, memory, processTable, blockedIOList)
         elif opcode == "T":
-            Processor.terminateProcess(
-                pid, memory, infinityMemoy, processTable, runningList, doneList)
+            self.terminateProcess(
+                pid, memory, infinityMemoy, processTable, doneList)
         elif opcode == "F":
             Processor.forkProcess(pid, n, time, memory,
-                                  processTable, readyList)
+                                  processTable, scheduler)
         elif opcode == "R":
             Processor.replaceProcessImage(pid, n, memory, processTable)
         else:
             pass
 
-    @staticmethod
-    def runInstruction(pid: int, time: int, memory, infinityMemory, processTable, runningList, readyList, blockedIOList, blockedMmList, doneList):
+    def runInstruction(self, pid: int, time: int, memory, infinityMemory, processTable, scheduler, blockedIOList, blockedMmList, doneList):
 
-        Processor.runSpecificInstruction(pid, processTable.getPC(
-            pid), time, memory, infinityMemory, processTable, runningList, readyList, blockedIOList, blockedMmList, doneList)
+        self.runSpecificInstruction(pid, processTable.getPC(
+            pid), time, memory, infinityMemory, processTable, scheduler, blockedIOList, blockedMmList, doneList)
+
+
+class ProcessorEntry(object):
+    """
+    A processor entry contains one PID and the timne spent in that process
+    """
+
+    def __init__(self, pid: int):
+        self.pid = pid
+        self.quantum = 0
+
+    def __str__(self):
+        return str(self.pid).zfill(3) + " | " + str(self.quantum).zfill(3)
+
+    def increaseQuantum(self, time: int = 1):
+        self.quantum += time
+
+    def getPID(self):
+        return self.pid
+
+    def getQuantum(self):
+        return self.quantum
+
+    def __eq__(self, pid: int):
+        return self.pid == pid
