@@ -1,7 +1,7 @@
 from MemoryItem import MemoryItem
 
 
-class VirtualMemory(object):
+class InfinityMemory(object):
     """
     A simple virtual memory implemented with a dict of lists. Each dict entry is a process.
     Each variable of the vectors are variables of the processes.
@@ -44,7 +44,7 @@ class VirtualMemory(object):
     def setValue(self, pid: int, variableNumber: int, value: int):
         self.memory[pid][variableNumber].setValue(value)
 
-    def moveToVirtualMemory(self, pid: int, virtualMemory):
+    def moveToInfinitylMemory(self, pid: int, infinityMemory):
         """
         Move all variables to virtual memory for final print
         """

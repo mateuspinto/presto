@@ -4,7 +4,7 @@ class Processor(object):
     """
 
     @staticmethod
-    def allocMemory(pid: int, numberOfVariables: int, memory, processTable, runningQueue, blockedMmQueue):
+    def allocMemory(pid: int, numberOfVariables: int, memory, processTable, runningList, blockedMmList):
         """
         Alloc some memory for the process.
         """
@@ -14,7 +14,7 @@ class Processor(object):
         if memory_index <0: # Index -1 means the memory allocation failed
 
             Processor.blockProcessByMemory(
-                pid, processTable, runningQueue, blockedMmQueue)
+                pid, processTable, runningList, blockedMmList)
         else:
 
             processTable.increasePC(pid)
@@ -63,40 +63,40 @@ class Processor(object):
                         memory.getValue(pid, variableNumber) - x)
 
     @staticmethod
-    def blockProcessByIO(pid: int, memory, processTable, runningQueue, blockedIOQueue):
+    def blockProcessByIO(pid: int, memory, processTable, runningList, blockedIOList):
 
         processTable.increasePC(pid)
         processTable.increaseCPUTime(pid)
 
-        runningQueue.popProcess(pid)
-        blockedIOQueue.appendProcess(pid)
+        runningList.removeProcess(pid)
+        blockedIOList.appendProcess(pid)
 
     @staticmethod
-    def blockProcessByMemory(pid: int, processTable, runningQueue, blockedMmQueue):
+    def blockProcessByMemory(pid: int, processTable, runningList, blockedMmList):
         """
         Exception handler for non allocated memory
         """
 
-        runningQueue.popProcess(pid)
-        blockedMmQueue.appendProcess(pid)
+        runningList.removeProcess(pid)
+        blockedMmList.appendProcess(pid)
 
     @staticmethod
-    def terminateProcess(pid: int, memory, virtualMemory, processTable, runningQueue, doneQueue):
+    def terminateProcess(pid: int, memory, infinityMemory, processTable, runningList, doneList):
 
-        runningQueue.popProcess(pid)
-        doneQueue.appendProcess(pid)
+        runningList.removeProcess(pid)
+        doneList.appendProcess(pid)
 
-        memory.moveToVirtualMemory(pid, virtualMemory)
+        memory.moveToInfinityMemory(pid, infinityMemory)
 
 
     @staticmethod
-    def forkProcess(pid: int, howManyLines: int, initialTime: int, memory, processTable, readyQueue):
+    def forkProcess(pid: int, howManyLines: int, initialTime: int, memory, processTable, readyList):
 
         processTable.increasePC(pid, howManyLines+1)
         processTable.increaseCPUTime(pid)
 
         son_PID: int = processTable.fork(pid, howManyLines, initialTime)
-        readyQueue.appendProcess(son_PID)
+        readyList.appendProcess(son_PID)
 
     @staticmethod
     def replaceProcessImage(pid: int, newFileNumber: int, memory, processTable):
@@ -107,7 +107,7 @@ class Processor(object):
         processTable.resetPC(pid)
 
     @staticmethod
-    def runSpecificInstruction(pid: int, line: int, time: int, memory, virtualMemoy, processTable, runningQueue, readyQueue, blockedIOQueue, blockedMmQueue, doneQueue):
+    def runSpecificInstruction(pid: int, line: int, time: int, memory, virtualMemoy, processTable, runningList, readyList, blockedIOList, blockedMmList, doneList):
 
         instruction = processTable.getInstruction(pid, line)
         opcode: str = instruction.opcode
@@ -115,7 +115,7 @@ class Processor(object):
         x: int = instruction.x
 
         if opcode == "N":
-            Processor.allocMemory(pid, n, memory, processTable, runningQueue, blockedMmQueue)
+            Processor.allocMemory(pid, n, memory, processTable, runningList, blockedMmList)
         elif opcode == "D":
             Processor.declare(pid, n, memory, processTable)
         elif opcode == "V":
@@ -126,20 +126,20 @@ class Processor(object):
             Processor.subValue(pid, n, x, memory, processTable)
         elif opcode == "B":
             Processor.blockProcessByIO(
-                pid, memory, processTable, runningQueue, blockedIOQueue)
+                pid, memory, processTable, runningList, blockedIOList)
         elif opcode == "T":
             Processor.terminateProcess(
-                pid, memory, virtualMemoy, processTable, runningQueue, doneQueue)
+                pid, memory, virtualMemoy, processTable, runningList, doneList)
         elif opcode == "F":
             Processor.forkProcess(pid, n, time, memory,
-                                  processTable, readyQueue)
+                                  processTable, readyList)
         elif opcode == "R":
             Processor.replaceProcessImage(pid, n, memory, processTable)
         else:
             pass
 
     @staticmethod
-    def runInstruction(pid: int, time: int, memory, virtualMemory, processTable, runningQueue, readyQueue, blockedIOQueue, blockedMmQueue, doneQueue):
+    def runInstruction(pid: int, time: int, memory, infinityMemory, processTable, runningList, readyList, blockedIOList, blockedMmList, doneList):
 
         Processor.runSpecificInstruction(pid, processTable.getPC(
-            pid), time, memory, virtualMemory, processTable, runningQueue, readyQueue, blockedIOQueue, blockedMmQueue, doneQueue)
+            pid), time, memory, infinityMemory, processTable, runningList, readyList, blockedIOList, blockedMmList, doneList)

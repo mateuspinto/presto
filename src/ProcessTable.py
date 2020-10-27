@@ -13,9 +13,6 @@ class ProcessTable(object):
         self.table.append(ProcessTableItem(fpid, fileNumber,
                                            priority, initTime, limit, startLine, endLine))
 
-    def popProcess(self, pid: int):
-        self.table.pop(pid)
-
     def __str__(self):
         display = "[Process Table]\n"
         display += "PID | FPID | PC  | VAR | PRI | INT | CPT\n"

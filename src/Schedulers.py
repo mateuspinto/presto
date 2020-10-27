@@ -7,23 +7,23 @@ class FirstInFirstOutScheduler(object):
         self.numberOfCores = numberOfCores
 
     @staticmethod
-    def getOldestPID(readyQueue, processTable) -> int:
+    def getOldestPID(readyList, processTable) -> int:
         ready_pid_time = []
 
         # Creating tuples on the form (PID, Init Time)
-        for elem in readyQueue.queue:
+        for elem in readyList.queue:
             ready_pid_time.append((elem, processTable.getInitTime(elem)))
 
         # Return the PID (first element of the tuple) from the tuple that has the minimal
         # value of Init Time
         return min(ready_pid_time, key=lambda tup: tup[1])[0]
 
-    def run(self, runningQueue, readyQueue, processTable):
+    def run(self, runningList, readyList, processTable):
 
         # While there is threads that can be executed and free processors
-        while (len(runningQueue) < self.numberOfCores) and (not readyQueue.isEmpty()):
+        while (len(runningList) < self.numberOfCores) and (not readyList.isEmpty()):
             pid_to_be_scheduled = FirstInFirstOutScheduler.getOldestPID(
-                readyQueue, processTable)
+                readyList, processTable)
 
-            readyQueue.popProcess(pid_to_be_scheduled)
-            runningQueue.appendProcess(pid_to_be_scheduled)
+            readyList.removeProcess(pid_to_be_scheduled)
+            runningList.appendProcess(pid_to_be_scheduled)

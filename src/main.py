@@ -1,42 +1,42 @@
 from ProcessTable import ProcessTable
-from VirtualMemory import VirtualMemory
 from Processor import Processor
-from ProcessQueue import ProcessQueue
+from ProcessList import ProcessList
 from Schedulers import FirstInFirstOutScheduler
+from InfinityMemory import InfinityMemory
 
-runingQueue = ProcessQueue()
-blockedIOQueue = ProcessQueue()
-blockedMmQueue = ProcessQueue()
-readyQueue = ProcessQueue()
-doneQueue = ProcessQueue()
+runingList = ProcessList()
+blockedIOList = ProcessList()
+blockedMmList = ProcessList()
+readyList = ProcessList()
+doneList = ProcessList()
 
 processTable = ProcessTable()
-memory = VirtualMemory()
+memory = InfinityMemory()
 scheduler = FirstInFirstOutScheduler()
 
 # Colocando primeiro processo na tabela de processos e na fila de execução
 processTable.appendProcess(-1, 0, 0, 0)
-runingQueue.appendProcess(0)
+runingList.appendProcess(0)
 
 time = 0
-while not readyQueue.isEmpty() or not runingQueue.isEmpty():
+while not readyList.isEmpty() or not runingList.isEmpty():
     time += 1
 
-    Processor.runInstruction(runingQueue.getNPID(), time, memory, None, processTable,
-                             runingQueue, readyQueue, blockedIOQueue, blockedMmQueue, doneQueue)
-    scheduler.run(runingQueue, readyQueue, processTable)
+    Processor.runInstruction(runingList.getNPID(), time, memory, None, processTable,
+                             runingList, readyList, blockedIOList, blockedMmList, doneList)
+    scheduler.run(runingList, readyList, processTable)
 
 print(memory)
 print(processTable)
 
-print("[Runing Queue]")
-print(runingQueue)
+print("[Runing List]")
+print(runingList)
 
-print("[Ready Queue]")
-print(readyQueue)
+print("[Ready List]")
+print(readyList)
 
-print("[Blocked by IO Queue]")
-print(blockedIOQueue)
+print("[Blocked by IO List]")
+print(blockedIOList)
 
-print("[Done Queue]")
-print(doneQueue)
+print("[Done List]")
+print(doneList)

@@ -1,6 +1,6 @@
-class ProcessQueue(object):
+class ProcessList(object):
     """
-    A queue of PIDs. 
+    A list of PIDs. 
     """
 
     def __init__(self):
@@ -9,7 +9,7 @@ class ProcessQueue(object):
     def appendProcess(self, pid: int):
         self.queue.append(pid)
 
-    def popProcess(self, pid: int):
+    def removeProcess(self, pid: int):
         return self.queue.remove(pid)
 
     def getNPID(self, n: int = 0):
