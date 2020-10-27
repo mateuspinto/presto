@@ -44,7 +44,7 @@ class InfinityMemory(object):
     def setValue(self, pid: int, variableNumber: int, value: int):
         self.memory[pid][variableNumber].setValue(value)
 
-    def moveToInfinitylMemory(self, pid: int, infinityMemory):
+    def moveToInfinityMemory(self, pid: int, infinityMemory):
         """
         Move all variables to virtual memory for final print
         """
