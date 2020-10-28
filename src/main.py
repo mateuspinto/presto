@@ -1,17 +1,17 @@
 from ProcessTable import ProcessTable
 from Processor import Processor, ProcessorEntry
 from ProcessList import ProcessList
-from Schedulers import FirstInFirstOutScheduler
-from InfinityMemory import InfinityMemory
+from Schedulers import FirstInFirstOutScheduler, ShortestFirstScheduler, ShortestRemainingTimeNextScheduler
+from InfiniteMemory import InfiniteMemory
 
 blockedIOList = ProcessList()
 blockedMmList = ProcessList()
 doneList = ProcessList()
 
-processor = Processor(3)
+processor = Processor()
 processTable = ProcessTable()
-infinityMemory = InfinityMemory()
-scheduler = FirstInFirstOutScheduler()
+infiniteMemory = InfiniteMemory()
+scheduler = ShortestRemainingTimeNextScheduler()
 
 # Colocando primeiro processo na tabela de processos e na fila de execução
 processTable.appendProcess(-1, 0, 0, 0)
@@ -21,10 +21,11 @@ time = 0
 while not scheduler.isEmpty() or not processor.isEmpty():
     time += 1
 
-    processor.runInstructions(time, infinityMemory, None, processTable, scheduler, blockedIOList, blockedMmList, doneList)
+    processor.runInstructions(time, infiniteMemory, None, processTable, scheduler, blockedIOList, blockedMmList, doneList)
+    print(processor)
     scheduler.run(processor, processTable)
 
-print(infinityMemory)
+print(infiniteMemory)
 print(processTable)
 
 print(processor)

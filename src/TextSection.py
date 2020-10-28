@@ -49,12 +49,15 @@ class TextSection(object):
         self.__read_file__(fileNumber, limited, startLine, endLine)
 
     def __str__(self):
-        display: str = '[Text section]\n'
+        display: str = "[Text section]"
 
         for instruction in self.code:
-            display += str(instruction) + '\n'
+            display += '\n' + str(instruction)
 
-        return display[:-1]
+        return display
+
+    def __len__(self):
+        return len(self.code)
 
     def replace(self, newFileNumber: int):
         self.__read_file__(newFileNumber)
@@ -101,20 +104,6 @@ class Instruction(object):
         else:
             return True
 
-    def hasN(self) -> bool:
-        """
-        Check if the instruction requires the N field
-        """
-
-        return Instruction.doesOpcodeHaveN(self.opcode)
-
-    def hasX(self) -> bool:
-        """
-        Check if the instruction requires the X field
-        """
-
-        return Instruction.doesOpcodeHaveX(self.opcode)
-
     def __init__(self, opcode: str, n: int, x: int):
         """
         Object constructor. Check if the opcode is valid and if N is an unsigned int
@@ -140,3 +129,17 @@ class Instruction(object):
             display += ' ' + str(self.x)
 
         return display
+
+    def hasN(self) -> bool:
+        """
+        Check if the instruction requires the N field
+        """
+
+        return Instruction.doesOpcodeHaveN(self.opcode)
+
+    def hasX(self) -> bool:
+        """
+        Check if the instruction requires the X field
+        """
+
+        return Instruction.doesOpcodeHaveX(self.opcode)

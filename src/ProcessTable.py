@@ -58,6 +58,12 @@ class ProcessTable(object):
     def resetPC(self, pid: int):
         self.table[pid].resetPC()
 
+    def predictTotalJobTime(self, pid: int) -> int:
+        return self.table[pid].predictTotalJobTime()
+
+    def predictRemainingJobTime(self, pid: int) -> int:
+        return self.table[pid].predictRemainingJobTime()
+
 
 class ProcessTableItem(object):
     """
@@ -105,3 +111,9 @@ class ProcessTableItem(object):
 
     def resetPC(self):
         self.pc = 0
+
+    def predictTotalJobTime(self) -> int:
+        return len(self.code)
+
+    def predictRemainingJobTime(self) -> int:
+        return self.predictTotalJobTime() - self.cpuTime
