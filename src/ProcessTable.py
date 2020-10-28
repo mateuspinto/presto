@@ -64,6 +64,12 @@ class ProcessTable(object):
     def predictRemainingJobTime(self, pid: int) -> int:
         return self.table[pid].predictRemainingJobTime()
 
+    def setPriority(self, pid: int, priority: int):
+        self.table[pid].setPriority(priority)
+
+    def getPriority(self, pid: int):
+        return self.table[pid].getPriority()
+
 
 class ProcessTableItem(object):
     """
@@ -99,6 +105,9 @@ class ProcessTableItem(object):
 
     def getPC(self):
         return self.pc
+
+    def getPriority(self):
+        return self.priority
 
     def increasePC(self, count: id = 1):
         self.pc += count

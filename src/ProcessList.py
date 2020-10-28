@@ -12,7 +12,7 @@ class ProcessList(object):
     def removeProcess(self, pid: int):
         return self.queue.remove(pid)
 
-    def getNPID(self, n: int = 0):
+    def frontPID(self, n: int = 0):
         return self.queue[n]
 
     def isEmpty(self) -> bool:
@@ -23,3 +23,6 @@ class ProcessList(object):
 
     def __str__(self):
         return str(self.queue)
+
+    def unqueue(self):
+        return self.queue.pop()

@@ -1,17 +1,20 @@
 from ProcessTable import ProcessTable
 from Processor import Processor, ProcessorEntry
 from ProcessList import ProcessList
-from Schedulers import FirstInFirstOutScheduler, ShortestJobFirstScheduler, ShortestRemainingTimeNextScheduler
+from Schedulers import FirstInFirstOutScheduler, ShortestJobFirstScheduler, ShortestRemainingTimeNextScheduler, RoundRobinScheduler, PriorityScheduler, LotteryScheduler, OrwellLotteryScheduler
 from InfiniteMemory import InfiniteMemory
+from Diagnostics import Diagnostics
 
 blockedIOList = ProcessList()
 blockedMmList = ProcessList()
 doneList = ProcessList()
 
-processor = Processor(2)
+processor = Processor()
 processTable = ProcessTable()
 infiniteMemory = InfiniteMemory()
-scheduler = ShortestRemainingTimeNextScheduler()
+scheduler = OrwellLotteryScheduler()
+
+diagnostics = Diagnostics()
 
 # Colocando primeiro processo na tabela de processos e na fila de execução
 processTable.appendProcess(-1, 0, 0, 0)
@@ -21,16 +24,7 @@ time = 0
 while not scheduler.isEmpty() or not processor.isEmpty():
     time += 1
 
-    processor.runInstructions(time, infiniteMemory, None, processTable, scheduler, blockedIOList, blockedMmList, doneList)
-    scheduler.run(processor, processTable)
+    processor.runInstructions(time, infiniteMemory, None, processTable, scheduler, blockedIOList, blockedMmList, doneList, diagnostics)
+    scheduler.run(processor, processTable, diagnostics)
 
-print(infiniteMemory)
-print(processor)
-
-print("[Blocked by IO List]")
-print(blockedIOList)
-
-print("[Done List]")
-print(doneList)
-
-print("total time = " + str(time))
+print(diagnostics)
