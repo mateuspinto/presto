@@ -1,18 +1,21 @@
 from ProcessTable import ProcessTable
 from Processor import Processor, ProcessorEntry
 from ProcessList import ProcessList
-from Schedulers import FirstInFirstOutScheduler, ShortestJobFirstScheduler, ShortestRemainingTimeNextScheduler, RoundRobinScheduler, PriorityScheduler, LotteryScheduler, OrwellLotteryScheduler
+from Schedulers import FirstInFirstOutScheduler, ShortestJobFirstScheduler, ShortestRemainingTimeNextScheduler, RoundRobinScheduler, PriorityScheduler, MultipleQueuesScheduler, LotteryScheduler, OrwellLotteryScheduler
 from InfiniteMemory import InfiniteMemory
 from Diagnostics import Diagnostics
+from MemoryManager import MemoryManager
+from PhysicalMemory import PhysicalMemory
 
 blockedIOList = ProcessList()
-blockedMmList = ProcessList()
+memoryManager = MemoryManager()
 doneList = ProcessList()
 
-processor = Processor()
+processor = Processor(3)
 processTable = ProcessTable()
-infiniteMemory = InfiniteMemory()
-scheduler = OrwellLotteryScheduler()
+memory = PhysicalMemory()
+InfiniteMemory = InfiniteMemory()
+scheduler = MultipleQueuesScheduler()
 
 diagnostics = Diagnostics()
 
@@ -24,7 +27,13 @@ time = 0
 while not scheduler.isEmpty() or not processor.isEmpty():
     time += 1
 
-    processor.runInstructions(time, infiniteMemory, None, processTable, scheduler, blockedIOList, blockedMmList, doneList, diagnostics)
+    processor.runInstructions(time, memory, InfiniteMemory, processTable, scheduler, blockedIOList, memoryManager, doneList, diagnostics)
+    print(memory)
+    print(processor)
+    print(processTable)
+    print(memoryManager)
     scheduler.run(processor, processTable, diagnostics)
+    memoryManager.run(memory, processor, scheduler, processTable)
 
+print(InfiniteMemory)
 print(diagnostics)

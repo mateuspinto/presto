@@ -10,7 +10,7 @@ class InfiniteMemory(object):
     def __init__(self):
         self.memory = {}
 
-    def appendProcess(self, pid: int, numberOfVariables: int) -> int:
+    def appendProcess(self, pid: int, numberOfVariables: int, processTable) -> int:
         """
         Append a new process and return the memory offset (always zero).
         """
@@ -35,17 +35,20 @@ class InfiniteMemory(object):
     def popProcess(self, pid: int):
         self.memory.pop(pid)
 
-    def getValue(self, pid: int, variableNumber: int):
+    def getValue(self, pid: int, variableNumber: int, processTable):
         return self.memory[pid][variableNumber].getValue()
 
-    def declare(self, pid: int, variableNumber: int):
+    def declare(self, pid: int, variableNumber: int, processTable):
         self.memory[pid][variableNumber].declare()
 
-    def setValue(self, pid: int, variableNumber: int, value: int):
+    def setValue(self, pid: int, variableNumber: int, value: int, processTable):
         self.memory[pid][variableNumber].setValue(value)
 
-    def moveToInfiniteMemory(self, pid: int, infiniteMemory):
+    def moveToInfiniteMemory(self, pid: int, processTable, infiniteMemory):
         """
         Move all variables to virtual memory for final print
         """
         pass
+
+    def haveMemoryAvailable(self, numberOfVariables: int):
+        return True

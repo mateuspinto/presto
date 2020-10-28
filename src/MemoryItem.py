@@ -22,8 +22,12 @@ class MemoryItem(object):
 
         self.value = value
 
+    def unalloc(self):
+        self.value = 0
+        self.declare = False
+        
     def __str__(self):
-        if self.declare:
+        if self.declared:
             return "|" + str(self.value).zfill(3) + "|"
         else:
             return " " + str(self.value).zfill(3) + " "

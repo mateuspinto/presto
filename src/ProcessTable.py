@@ -15,7 +15,7 @@ class ProcessTable(object):
 
     def __str__(self):
         display = "[Process Table]\n"
-        display += "PID | FPID | PC  | VAR | PRI | INT | CPT\n"
+        display += "PID | FPID | PC  | VA0 | VAS | PRI | INT | CPT\n"
 
         for pid, process in enumerate(self.table, 0):
             display += str(pid).zfill(3) + " | " + str(process) + "\n"
@@ -25,8 +25,11 @@ class ProcessTable(object):
     def printTextSection(self, pid: int):
         self.table[pid].printTextSection()
 
-    def setVariables(self, pid: int, variables: int):
-        self.table[pid].variables = variables
+    def setVariablesOffset(self, pid: int, variables: int):
+        self.table[pid].setVariablesOffset(variables)
+
+    def getVariablesOffset(self, pid: int):
+        return self.table[pid].getVariablesOffset(pid)
 
     def increaseCPUTime(self, pid: int):
         self.table[pid].cpuTime += 1
@@ -70,6 +73,12 @@ class ProcessTable(object):
     def getPriority(self, pid: int):
         return self.table[pid].getPriority()
 
+    def setMemorySize(self, pid: int, memorySize: int):
+        self.table[pid].setMemorySize(memorySize)
+
+    def getMemorySize(self, pid: int):
+        return self.table[pid].getMemorySize()
+
 
 class ProcessTableItem(object):
     """
@@ -79,6 +88,7 @@ class ProcessTableItem(object):
     def __init__(self, fpid: int, fileNumber: int, priority: int, initTime: int, limit: bool = False, startLine: int = 0, endLine: int = 0):
         self.fpid = fpid
         self.variables = -1
+        self.memorySize = 0
         self.code = TextSection(fileNumber, limit, startLine, endLine)
         self.priority = priority
         self.initTime = initTime
@@ -86,10 +96,13 @@ class ProcessTableItem(object):
         self.pc = 0
 
     def __str__(self):
-        return str(self.fpid).zfill(4) + " | " + str(self.pc).zfill(3) + " | " + str(self.variables).zfill(3) + " | " + str(self.priority).zfill(3) + " | " + str(self.initTime).zfill(3) + " | " + str(self.cpuTime).zfill(3)
+        return str(self.fpid).zfill(4) + " | " + str(self.pc).zfill(3) + " | " + str(self.variables).zfill(3) + " | " + str(self.memorySize).zfill(3) + " | " + str(self.priority).zfill(3) + " | " + str(self.initTime).zfill(3) + " | " + str(self.cpuTime).zfill(3)
 
-    def setVariables(self, variables: int):
+    def setVariablesOffset(self, variables: int):
         self.variables = variables
+
+    def getVariablesOffset(self, variables: int):
+        return self.variables
 
     def setPriority(self, priority: int):
         self.priority = priority
@@ -126,3 +139,9 @@ class ProcessTableItem(object):
 
     def predictRemainingJobTime(self) -> int:
         return self.predictTotalJobTime() - self.cpuTime
+
+    def setMemorySize(self, memorySize: int):
+        self.memorySize = memorySize
+
+    def getMemorySize(self):
+        return self.memorySize
