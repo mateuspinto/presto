@@ -1,7 +1,7 @@
 from ProcessTable import ProcessTable
 from Processor import Processor, ProcessorEntry
 from ProcessList import ProcessList
-from Schedulers import FirstInFirstOutScheduler, ShortestFirstScheduler, ShortestRemainingTimeNextScheduler
+from Schedulers import FirstInFirstOutScheduler
 from InfiniteMemory import InfiniteMemory
 
 blockedIOList = ProcessList()
@@ -11,7 +11,7 @@ doneList = ProcessList()
 processor = Processor()
 processTable = ProcessTable()
 infiniteMemory = InfiniteMemory()
-scheduler = ShortestRemainingTimeNextScheduler()
+scheduler = FirstInFirstOutScheduler()
 
 # Colocando primeiro processo na tabela de processos e na fila de execução
 processTable.appendProcess(-1, 0, 0, 0)
