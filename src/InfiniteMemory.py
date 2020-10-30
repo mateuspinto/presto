@@ -24,7 +24,7 @@ class InfiniteMemory(object):
     def __str__(self):
         display = "[Virtual Memory]\n"
 
-        for key in self.memory:
+        for key in sorted(self.memory):
             display += "PID = " + str(key).zfill(3) + " >>> "
             for item in self.memory[key]:
                 display += str(item) + " "

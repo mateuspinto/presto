@@ -6,26 +6,83 @@ class PhysicalMemory(object):
     A simple physical memory
     """
 
-    def __init__(self, size: int = 20):
+    def __init__(self, size: int = 20, algorithm: int = 0):
         self.memory = []
-        self.size = size
+        self.lastVisited = 0
+        self.algorithm = algorithm
 
-        for _i in range(self.size):
+        for _i in range(size):
             self.memory.append(PhysicalMemoryItem())
 
-    def firstFit(self, numberOfVariables: int) -> int:
+    def getFreeSegments(self):
+        fits_list = []
+
         free_contiguous = 0
-        i = 0
 
-        while free_contiguous != numberOfVariables and i < self.size:
-            if self.memory[i].isAllocated():
-                free_contiguous = 0
-            else:
+        for i in range(len(self.memory)):
+            if not self.memory[i].isAllocated():
                 free_contiguous += 1
-            i += 1
+            else:
+                if free_contiguous != 0:
+                    fits_list.append((i-free_contiguous+1, free_contiguous))
+                free_contiguous = 0
 
-        if free_contiguous == numberOfVariables:
-            return i - numberOfVariables
+        if free_contiguous != 0:
+            fits_list.append((i-free_contiguous+1, free_contiguous))
+
+        return fits_list
+
+    def haveMemoryAvailable(self, numberOfVariables: int) -> bool:
+        if len(self.getFits(numberOfVariables)) > 0:
+            return True
+        else:
+            return False
+
+    def getFits(self, numberOfVariables: int):
+        fits_list = self.getFreeSegments()
+
+        for i in range(len(fits_list)):
+            if fits_list[i][1] < numberOfVariables:
+                fits_list.pop(i)
+
+        return fits_list
+
+    def firstFit(self, numberOfVariables: int) -> int:
+        fits_list = self.getFits(numberOfVariables)
+
+        if len(fits_list) > 0:
+            return fits_list[0][0]
+        else:
+            return -1
+
+    def bestFit(self, numberOfVariables: int) -> int:
+        fits_list = self.getFits(numberOfVariables)
+
+        if len(fits_list) > 0:
+            return min(fits_list, key=lambda tup: tup[1])[0]
+        else:
+            return -1
+
+    def worstFit(self, numberOfVariables: int) -> int:
+        fits_list = self.getFits(numberOfVariables)
+
+        if len(fits_list) > 0:
+            return max(fits_list, key=lambda tup: tup[1])[0]
+        else:
+            return -1
+
+    def nextFit(self, numberOfVariables: int) -> int:
+        fits_list = self.getFits(numberOfVariables)
+
+        if len(fits_list) > 0:
+            for i in range(len(fits_list)):
+                if fits_list[i][0] >= self.lastVisited:
+                    self.lastVisited = fits_list[i][0]
+                    return fits_list[i][0]
+
+            # A memory turnaround
+            self.lastVisited = fits_list[0][0]
+            return fits_list[0][0]
         else:
             return -1
 
@@ -34,7 +91,14 @@ class PhysicalMemory(object):
         Append a new process and return the memory offset.
         """
 
-        offset = self.firstFit(numberOfVariables)
+        if self.algorithm == 0:
+            offset = self.firstFit(numberOfVariables)
+        elif self.algorithm == 1:
+            offset = self.bestFit(numberOfVariables)
+        elif self.algorithm == 2:
+            offset = self.worstFit(numberOfVariables)
+        else:
+            offset = self.nextFit(numberOfVariables)
 
         if offset < 0:
             return -1
@@ -78,12 +142,6 @@ class PhysicalMemory(object):
                 pid, variable, processTable), processTable)
 
         self.popProcess(pid, processTable)
-
-    def haveMemoryAvailable(self, numberOfVariables: int) -> bool:
-        if self.firstFit(numberOfVariables) < 0:
-            return False
-        else:
-            return True
 
 
 class PhysicalMemoryItem(MemoryItem):
