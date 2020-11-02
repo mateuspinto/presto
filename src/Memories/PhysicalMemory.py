@@ -1,4 +1,4 @@
-from MemoryItem import MemoryItem
+from Memories.MemoryItem import MemoryItem
 
 
 class PhysicalMemory(object):

@@ -1,4 +1,4 @@
-from TextSection import TextSection
+from InterpretedLang import TextSection
 
 
 class ProcessTable(object):

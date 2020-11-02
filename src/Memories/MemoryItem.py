@@ -21,10 +21,6 @@ class MemoryItem(object):
             raise NameError("Variable not declared!")
 
         self.value = value
-
-    def unalloc(self):
-        self.value = 0
-        self.declare = False
         
     def __str__(self):
         if self.declared:

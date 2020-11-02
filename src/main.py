@@ -1,11 +1,9 @@
 from ProcessTable import ProcessTable
-from Processor import Processor, ProcessorEntry
-from ProcessList import ProcessList
-from Schedulers import FirstInFirstOutScheduler, ShortestJobFirstScheduler, ShortestRemainingTimeNextScheduler, RoundRobinScheduler, PriorityScheduler, MultipleQueuesScheduler, LotteryScheduler, OrwellLotteryScheduler
-from InfiniteMemory import InfiniteMemory
+from Processor import Processor
 from Diagnostics import Diagnostics
-from MemoryManager import MemoryManager
-from PhysicalMemory import PhysicalMemory
+from Schedulers import *
+from InterpretedLang import *
+from Memories import *
 
 blockedIOList = ProcessList()
 memoryManager = MemoryManager()
@@ -27,7 +25,8 @@ time = 0
 while not scheduler.isEmpty() or not processor.isEmpty():
     time += 1
 
-    processor.runInstructions(time, memory, InfiniteMemory, processTable, scheduler, blockedIOList, memoryManager, doneList, diagnostics)
+    processor.runInstructions(time, memory, InfiniteMemory, processTable,
+                              scheduler, blockedIOList, memoryManager, doneList, diagnostics)
     print(memory)
     print(processor)
     print(processTable)
