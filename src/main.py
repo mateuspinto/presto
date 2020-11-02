@@ -15,7 +15,7 @@ processTable = ProcessTable()
 diagnostics = Diagnostics()
 
 processor = Processor(3)
-memory = PhysicalMemory()
+memory = InfiniteMemory()
 InfiniteMemory = InfiniteMemory()
 scheduler = MultipleQueuesScheduler()
 
@@ -64,27 +64,90 @@ while True:
                 pass
 
     elif typed_option == "2":
-        pass
+        inputNumber = int(input("Digite um número de arquivo de entrada :"))
+        read_file(int(inputNumber), processor, processTable, memory, InfiniteMemory,
+                  scheduler, memoryManager, blockedIOList, doneList, diagnostics)
+        exit(0)
 
     elif typed_option == "3":
-        pass
+
+        while True:
+            clear_screen()
+            print(config_menu(), end='')
+
+            try:
+                typed_option = input()
+            except:
+                typed_option = "X"
+
+            if typed_option == "1":
+
+                while True:
+                    clear_screen()
+                    try:
+                        cores = int(
+                            input("Digite o número de processadores: "))
+                        processor = Processor(cores)
+                        break
+                    except:
+                        pass
+
+            elif typed_option == "2":
+
+                while True:
+                    clear_screen()
+                    print(show_schedulers())
+
+                    try:
+                        scheduler_option = input()
+                    except:
+                        scheduler_option = "X"
+
+                    if scheduler_option == "1":
+                        scheduler = FirstInFirstOutScheduler()
+                        break
+
+                    elif scheduler_option == "2":
+                        scheduler = LotteryScheduler()
+                        break
+
+                    elif scheduler_option == "3":
+                        scheduler = MultipleQueuesScheduler(3)
+                        break
+
+                    elif scheduler_option == "4":
+                        scheduler = OrwellLotteryScheduler()
+                        break
+
+                    elif scheduler_option == "5":
+                        scheduler = PriorityScheduler()
+                        break
+
+                    elif scheduler_option == "6":
+                        scheduler = RoundRobinScheduler()
+                        break
+
+                    elif scheduler_option == "7":
+                        scheduler = ShortestJobFirstScheduler()
+                        break
+
+                    elif scheduler_option == "8":
+                        scheduler = ShortestRemainingTimeNextScheduler()
+                        break
+
+                    else:
+                        pass
+
+            elif typed_option == "4":
+                break
+
+            else:
+                pass
 
     elif typed_option == "4":
-        exit(0)
+        break
 
     else:
         pass
 
-
-time = 0
-while not scheduler.isEmpty() or not processor.isEmpty():
-    time += 1
-
-    processor.runInstructions(time, memory, InfiniteMemory, processTable,
-                              scheduler, blockedIOList, memoryManager, doneList, diagnostics)
-    print(side_to_side_strings([str(processTable), str(processor)], 3))
-    scheduler.run(processor, processTable, diagnostics)
-    memoryManager.run(memory, processor, scheduler, processTable)
-
-print(InfiniteMemory)
-print(diagnostics)
+print("Obrigado!\n")
