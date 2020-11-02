@@ -22,7 +22,7 @@ class InfiniteMemory(object):
         return 0
 
     def __str__(self):
-        display = "[Virtual Memory]\n"
+        display = "[Infinite Memory]\n"
 
         for key in sorted(self.memory):
             display += "PID = " + str(key).zfill(3) + " >>> "

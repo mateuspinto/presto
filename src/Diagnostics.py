@@ -27,21 +27,34 @@ class Diagnostics(object):
         display = "[Final Report]\n"
         display += "Context switches: " + str(self.contextSwitch) + "\n"
         display += "Processes added: " + str(self.processesAdded) + "\n"
-        display += "Response time: " + str(self.rawResponseTime/self.T) + "\n"
+
+        if self.T == 0:
+            display += "Response time: inf\n"
+        else:
+            display += "Response time: " + \
+                str(self.rawResponseTime/self.T) + "\n"
+
         display += "Priority changes: " + str(self.priorityChange) + "\n"
         display += "Instructions runned: " + str(self.instructions) + "\n"
-        
+
         display += "\n[Memory info]\n"
 
         if self.mmAllocSucess == 0 and self.mmAllocFailed == 0:
             display += "Memory allocation failed ratio: 100%\n"
         else:
-            display += "Memory allocation failed ratio: " + str(self.mmAllocFailed / (self.mmAllocFailed + self.mmAllocSucess)*100) + "%\n"
+            display += "Memory allocation failed ratio: " + \
+                str(self.mmAllocFailed / (self.mmAllocFailed +
+                                          self.mmAllocSucess)*100) + "%\n"
 
-        display += "Memory allocation sucess: " + str(self.mmAllocSucess) + "\n"
-        display += "Memory allocation failed: " + str(self.mmAllocFailed) + "\n"
+        display += "Memory allocation sucess: " + \
+            str(self.mmAllocSucess) + "\n"
+        display += "Memory allocation failed: " + \
+            str(self.mmAllocFailed) + "\n"
 
-        display += "\n[Instructions runned]\n"
+        return display
+
+    def showInstructions(self):
+        display = "\n[Instructions runned]\n"
         display += "N: " + str(self.N) + "\n"
         display += "D: " + str(self.D) + "\n"
         display += "V: " + str(self.V) + "\n"
@@ -50,6 +63,6 @@ class Diagnostics(object):
         display += "B: " + str(self.B) + "\n"
         display += "T: " + str(self.T) + "\n"
         display += "F: " + str(self.F) + "\n"
-        display += "R: " + str(self.R)
+        display += "R: " + str(self.R) + "\n"
 
         return display
