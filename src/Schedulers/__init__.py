@@ -1,5 +1,4 @@
 # Utils
-from Schedulers.ProcessList import ProcessList
 from Schedulers.BlockedByIOList import BlockedByIOList
 from Schedulers.DoneList import DoneList
 

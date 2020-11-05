@@ -245,6 +245,7 @@ def setMemory(cursor, cursor_style, style):
 
     return memory
 
+
 def SimulatorStatus(processor, memory, scheduler):
     display = "Using:\n"
     display += "- " + processor.name() + "\n"
@@ -266,12 +267,12 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
         main_menu_style = ("bg_red", "fg_yellow")
 
         main_menu = TerminalMenu(menu_entries=main_menu_items,
-                                title=main_menu_title,
-                                menu_cursor=main_menu_cursor,
-                                menu_cursor_style=main_menu_cursor_style,
-                                menu_highlight_style=main_menu_style,
-                                cycle_cursor=True,
-                                clear_screen=True)
+                                 title=main_menu_title,
+                                 menu_cursor=main_menu_cursor,
+                                 menu_cursor_style=main_menu_cursor_style,
+                                 menu_highlight_style=main_menu_style,
+                                 cycle_cursor=True,
+                                 clear_screen=True)
         main_sel = main_menu.show()
 
         if main_sel == 0:
@@ -286,16 +287,17 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
             config_menu_back = False
             while not config_menu_back:
                 config_menu_title = ">>> Config menu\n\n"
-                config_menu_title += SimulatorStatus(processor, memory, scheduler)
+                config_menu_title += SimulatorStatus(
+                    processor, memory, scheduler)
                 config_menu_items = ["Set number of processors",
-                                    "Set process schedulers", "Set memory type", "Back to Main Menu"]
+                                     "Set process schedulers", "Set memory type", "Back to Main Menu"]
                 config_menu = TerminalMenu(config_menu_items,
-                                        config_menu_title,
-                                        main_menu_cursor,
-                                        main_menu_cursor_style,
-                                        main_menu_style,
-                                        cycle_cursor=True,
-                                        clear_screen=True)
+                                           config_menu_title,
+                                           main_menu_cursor,
+                                           main_menu_cursor_style,
+                                           main_menu_style,
+                                           cycle_cursor=True,
+                                           clear_screen=True)
                 config_sel = config_menu.show()
                 if config_sel == 0:
                     setNumberOfProcessors(processor)
