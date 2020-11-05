@@ -164,7 +164,7 @@ def setSchedulers(cursor, cursor_style, style):
                             "Priority Scheduler",
                             "Round Robin",
                             "Shortest Job First",
-                            "Shortestest remaining time next", "Back to config menu"]
+                            "Shortestest remaining time next"]
     scheduler_menu = TerminalMenu(scheduler_menu_items,
                                   scheduler_menu_title,
                                   cursor,
