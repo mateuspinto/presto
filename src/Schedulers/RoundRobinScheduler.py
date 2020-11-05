@@ -10,9 +10,12 @@ class RoundRobinScheduler(object):
         self.readyList = ProcessList()
         self.quantum = quantum
         self.currentTime = 0
+    
+    def name(self):
+        return "Round Robin Scheduler (quantum: " + str(self.quantum) + ")"
 
     def __str__(self):
-        return "[Round Robin Scheduler]\n" + str(self.readyList)
+        return "[" + self.name() + "]\n" + str(self.readyList)
 
     def __len__(self):
         return len(self.readyList)

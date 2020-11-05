@@ -108,8 +108,23 @@ class PhysicalMemory(object):
 
             return offset
 
+    def name(self):
+        display = "Physical Memory"
+        display += " (size: " + str(len(self.memory)) + ") "
+
+        if self.algorithm == 0:
+            display += "(First fit)"
+        elif self.algorithm == 1:
+            display += "(Best fit)"
+        elif self.algorithm == 2:
+            display += "(Worst fit)"
+        elif self.algorithm == 3:
+            display += "(Next fit)"
+
+        return display
+
     def __str__(self):
-        display = "[Physical Memory]\n"
+        display = "[" + self.name() + "]\n"
 
         for number, item in enumerate(self.memory, 1):
             if number == 20:

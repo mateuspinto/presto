@@ -21,8 +21,11 @@ class InfiniteMemory(object):
 
         return 0
 
+    def name(self):
+        return "Infinite Memory"
+
     def __str__(self):
-        display = "[Infinite Memory]\n"
+        display = "[" + self.name() + "]\n"
 
         for key in sorted(self.memory):
             display += "PID = " + str(key).zfill(3) + " >>> "

@@ -13,8 +13,11 @@ class Processor(object):
     def getNumberOfProcess(self):
         return len(self.threads)
 
+    def name(self):
+        return str(self.numberOfCores) + "-Core Processor"
+
     def __str__(self):
-        display = "[" + str(self.numberOfCores) + "-Core-Processor]\n"
+        display = "[" + self.name() + "]\n"
 
         display += "PID | TIM"
         for i in self.threads:

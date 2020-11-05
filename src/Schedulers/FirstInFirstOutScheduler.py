@@ -8,9 +8,12 @@ class FirstInFirstOutScheduler(object):
 
     def __init__(self):
         self.readyList = ProcessList()
+    
+    def name(self):
+        return "FIFO Scheduler"
 
     def __str__(self):
-        return "[FIFO Scheduler]\n" + str(self.readyList)
+        return "[" + self.name() + "]\n" + str(self.readyList)
 
     def isEmpty(self):
         return self.readyList.isEmpty()

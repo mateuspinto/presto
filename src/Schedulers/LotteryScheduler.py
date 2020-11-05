@@ -10,8 +10,11 @@ class LotteryScheduler(object):
     def __init__(self):
         self.readyList = ProcessList()
 
+    def name(self):
+        return "Lottery Scheduler"
+
     def __str__(self):
-        return "[Lottery Scheduler]\n" + str(self.readyList)
+        return "[" + self.name() + "]\n" + str(self.readyList)
 
     def __len__(self):
         return len(self.readyList)

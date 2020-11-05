@@ -10,7 +10,7 @@ from Memories import *
 
 
 def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system('clear')
 
 
 def side_to_side_strings(strings, spacesBetween: int = 1):
@@ -245,48 +245,57 @@ def setMemory(cursor, cursor_style, style):
 
     return memory
 
+def SimulatorStatus(processor, memory, scheduler):
+    display = "Using:\n"
+    display += "- " + processor.name() + "\n"
+    display += "- " + scheduler.name() + "\n"
+    display += "- " + memory.name() + "\n"
+
+    return display
+
 
 def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
-    main_menu_title = "  Simple process simulator. By Daniel, Leandro and Mateus\n"
-    main_menu_items = ["Interactive Mode", "Run file", "Config", "Quit"]
-    main_menu_cursor = "> "
-    main_menu_cursor_style = ("fg_red", "bold")
-    main_menu_style = ("bg_red", "fg_yellow")
-
-    main_menu = TerminalMenu(menu_entries=main_menu_items,
-                             title=main_menu_title,
-                             menu_cursor=main_menu_cursor,
-                             menu_cursor_style=main_menu_cursor_style,
-                             menu_highlight_style=main_menu_style,
-                             cycle_cursor=True,
-                             clear_screen=True)
-
-    config_menu_title = "  Config menu\n"
-    config_menu_items = ["Set number of processors",
-                         "Set process schedulers", "Set memory type", "Back to Main Menu"]
-    config_menu_back = False
-    config_menu = TerminalMenu(config_menu_items,
-                               config_menu_title,
-                               main_menu_cursor,
-                               main_menu_cursor_style,
-                               main_menu_style,
-                               cycle_cursor=True,
-                               clear_screen=True)
-
     while True:
+        main_menu_title = "*** Simple process simulator Mk II ***\n"
+        main_menu_title += "By Daniel, Leandro and Mateus\n\n"
+        main_menu_title += ">>> Main Menu\n\n"
+        main_menu_title += SimulatorStatus(processor, memory, scheduler)
+        main_menu_items = ["Interactive Mode", "Run file", "Config", "Quit"]
+        main_menu_cursor = "> "
+        main_menu_cursor_style = ("fg_red", "bold")
+        main_menu_style = ("bg_red", "fg_yellow")
+
+        main_menu = TerminalMenu(menu_entries=main_menu_items,
+                                title=main_menu_title,
+                                menu_cursor=main_menu_cursor,
+                                menu_cursor_style=main_menu_cursor_style,
+                                menu_highlight_style=main_menu_style,
+                                cycle_cursor=True,
+                                clear_screen=True)
         main_sel = main_menu.show()
 
         if main_sel == 0:
             interactiveMode(time, processor, processTable, memory, InfiniteMemory,
                             scheduler, memoryManager, blockedIOList, doneList, diagnostics)
-            exit(0)
+            return 0
         elif main_sel == 1:
             runFile(time, processor, processTable, memory, InfiniteMemory,
                     scheduler, memoryManager, blockedIOList, doneList, diagnostics)
-            exit(0)
+            return 0
         elif main_sel == 2:
             config_menu_back = False
             while not config_menu_back:
+                config_menu_title = ">>> Config menu\n\n"
+                config_menu_title += SimulatorStatus(processor, memory, scheduler)
+                config_menu_items = ["Set number of processors",
+                                    "Set process schedulers", "Set memory type", "Back to Main Menu"]
+                config_menu = TerminalMenu(config_menu_items,
+                                        config_menu_title,
+                                        main_menu_cursor,
+                                        main_menu_cursor_style,
+                                        main_menu_style,
+                                        cycle_cursor=True,
+                                        clear_screen=True)
                 config_sel = config_menu.show()
                 if config_sel == 0:
                     setNumberOfProcessors(processor)
@@ -300,7 +309,7 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
                     config_menu_back = True
                     print("Back Selected")
         elif main_sel == 3:
-            exit(0)
+            return 0
 
 
 if __name__ == "__main__":

@@ -13,8 +13,11 @@ class MultipleQueuesScheduler(object):
         for _i in range(self.NQueues):
             self.queues.append([])
 
+    def name(self):
+        return str(self.NQueues) + " Queues Scheduler"
+
     def __str__(self):
-        display = "[Multiple Queues Scheduler]"
+        display = "[" + self.name() + "]"
         for queue in range(self.NQueues):
             display += "\nQueue " + str(queue) + " :"
             for pid in self.queues[queue]:
