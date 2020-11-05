@@ -1,7 +1,8 @@
 from Schedulers.ProcessList import ProcessList
+from Schedulers.AbstractScheduler import AbstractScheduler
 
 
-class PriorityScheduler(object):
+class PriorityScheduler(AbstractScheduler):
     """
     A simple Priority Scheduler for multicore CPUS
     """
@@ -9,22 +10,22 @@ class PriorityScheduler(object):
     def __init__(self):
         self.readyList = ProcessList()
 
-    def name(self):
+    def name(self) -> str:
         return "Priority Scheduler"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "[" + self.name() + "]\n" + str(self.readyList)
 
-    def isEmpty(self):
+    def isEmpty(self) -> bool:
         return self.readyList.isEmpty()
 
-    def addReadyProcess(self, pid: int, processTable):
+    def addReadyProcess(self, pid: int, processTable) -> None:
         self.readyList.appendProcess(pid)
 
-    def removeReadyProcess(self, pid: int):
+    def removeReadyProcess(self, pid: int) -> None:
         self.readyList.removeProcess(pid)
 
-    def changePriorityBlockedProcess(self, pid: int, processTable):
+    def changePriorityBlockedProcess(self, pid: int, processTable) -> None:
         processTable.setPriority(pid, processTable.getPriority(pid) + 1)
 
     def getHighestPriorityPID(self, processTable) -> int:
@@ -38,7 +39,7 @@ class PriorityScheduler(object):
         # value of Init Time
         return min(ready_pid_time, key=lambda tup: tup[1])[0]
 
-    def run(self, processor, processTable, diagnostics):
+    def run(self, processor, processTable, diagnostics) -> None:
 
         # While there is threads that can be executed and free processors
         while (not processor.isFull()) and (not self.isEmpty()):

@@ -1,8 +1,9 @@
 from Schedulers.ProcessList import ProcessList
 from random import seed, randint, choice
+from Schedulers.AbstractScheduler import AbstractScheduler
 
 
-class LotteryScheduler(object):
+class LotteryScheduler(AbstractScheduler):
     """
     A simple Lottery Scheduler for multicore CPUS
     """
@@ -10,28 +11,28 @@ class LotteryScheduler(object):
     def __init__(self):
         self.readyList = ProcessList()
 
-    def name(self):
+    def name(self) -> str:
         return "Lottery Scheduler"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "[" + self.name() + "]\n" + str(self.readyList)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.readyList)
 
-    def isEmpty(self):
+    def isEmpty(self) -> bool:
         return self.readyList.isEmpty()
 
-    def addReadyProcess(self, pid: int, processTable):
+    def addReadyProcess(self, pid: int, processTable) -> None:
         self.readyList.appendProcess(pid)
 
-    def removeReadyProcess(self, pid: int):
+    def removeReadyProcess(self, pid: int) -> None:
         self.readyList.removeProcess(pid)
 
-    def changePriorityBlockedProcess(self, pid: int, processTable):
+    def changePriorityBlockedProcess(self, pid: int, processTable) -> None:
         pass
 
-    def run(self, processor, processTable, diagnostics):
+    def run(self, processor, processTable, diagnostics) -> None:
 
         if self.isEmpty():
             return

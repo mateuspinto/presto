@@ -1,7 +1,8 @@
 from Memories.MemoryItem import MemoryItem
+from Memories.AbstractMemory import AbstractMemory
 
 
-class PhysicalMemory(object):
+class PhysicalMemory(AbstractMemory):
     """
     A simple physical memory
     """

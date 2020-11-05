@@ -1,7 +1,8 @@
 from Memories.MemoryItem import MemoryItem
+from Memories.AbstractMemory import AbstractMemory
 
 
-class InfiniteMemory(object):
+class InfiniteMemory(AbstractMemory):
     """
     A simple virtual memory implemented with a dict of lists. Each dict entry is a process.
     Each variable of the vectors are variables of the processes.
@@ -21,10 +22,10 @@ class InfiniteMemory(object):
 
         return 0
 
-    def name(self):
+    def name(self) -> str:
         return "Infinite Memory"
 
-    def __str__(self):
+    def __str__(self) -> str:
         display = "[" + self.name() + "]\n"
 
         for key in sorted(self.memory):
@@ -35,23 +36,23 @@ class InfiniteMemory(object):
 
         return display[:-1]
 
-    def popProcess(self, pid: int):
+    def popProcess(self, pid: int) -> None:
         self.memory.pop(pid)
 
-    def getValue(self, pid: int, variableNumber: int, processTable):
+    def getValue(self, pid: int, variableNumber: int, processTable) -> int:
         return self.memory[pid][variableNumber].getValue()
 
-    def declare(self, pid: int, variableNumber: int, processTable):
+    def declare(self, pid: int, variableNumber: int, processTable) -> None:
         self.memory[pid][variableNumber].declare()
 
-    def setValue(self, pid: int, variableNumber: int, value: int, processTable):
+    def setValue(self, pid: int, variableNumber: int, value: int, processTable) -> None:
         self.memory[pid][variableNumber].setValue(value)
 
-    def moveToInfiniteMemory(self, pid: int, processTable, infiniteMemory):
+    def moveToInfiniteMemory(self, pid: int, processTable, infiniteMemory) -> None:
         """
         Move all variables to virtual memory for final print
         """
         pass
 
-    def haveMemoryAvailable(self, numberOfVariables: int):
+    def haveMemoryAvailable(self, numberOfVariables: int) -> bool:
         return True

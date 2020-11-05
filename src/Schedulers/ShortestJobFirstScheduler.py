@@ -1,6 +1,7 @@
 from Schedulers.ProcessList import ProcessList
+from Schedulers.AbstractScheduler import AbstractScheduler
 
-class ShortestJobFirstScheduler(object):
+class ShortestJobFirstScheduler(AbstractScheduler):
     """
     A simple Shortest Job First Scheduler for multicore CPUS
     """
@@ -8,22 +9,22 @@ class ShortestJobFirstScheduler(object):
     def __init__(self):
         self.readyList = ProcessList()
 
-    def name(self):
+    def name(self) -> str:
         return "Shortest Job First Scheduler"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "[" + self.name() + "]\n" + str(self.readyList)
 
-    def isEmpty(self):
+    def isEmpty(self) -> bool:
         return self.readyList.isEmpty()
 
-    def addReadyProcess(self, pid: int, processTable):
+    def addReadyProcess(self, pid: int, processTable) -> None:
         self.readyList.appendProcess(pid)
 
-    def removeReadyProcess(self, pid: int):
+    def removeReadyProcess(self, pid: int) -> None:
         self.readyList.removeProcess(pid)
 
-    def changePriorityBlockedProcess(self, pid: int, processTable):
+    def changePriorityBlockedProcess(self, pid: int, processTable) -> None:
         pass
 
     def getShortestPIDFromScheduler(self, processTable) -> int:
@@ -64,7 +65,7 @@ class ShortestJobFirstScheduler(object):
 
         return max(ready_pid_time, key=lambda tup: tup[1])[0]
 
-    def run(self, processor, processTable, diagnostics):
+    def run(self, processor, processTable, diagnostics) -> None:
         if self.isEmpty():
             return
 

@@ -1,4 +1,3 @@
-import time
 import os
 from simple_term_menu import TerminalMenu
 from ProcessTable import ProcessTable
@@ -152,7 +151,7 @@ def runFile(time, processor, processTable, memory, InfiniteMemory, scheduler, me
 def setNumberOfProcessors(processor):
     while True:
         inputNumber = int(
-            input("Type how many processors do you want (n>0) :"))
+            input("Type how many processors do you want (n>0): "))
         if inputNumber > 0:
             processor.numberOfCores = inputNumber
             break

@@ -1,7 +1,8 @@
 from Schedulers.ProcessList import ProcessList
+from Schedulers.AbstractScheduler import AbstractScheduler
 
 
-class MultipleQueuesScheduler(object):
+class MultipleQueuesScheduler(AbstractScheduler):
     """
     A simple Priority Scheduler for multicore CPUS
     """
@@ -13,7 +14,7 @@ class MultipleQueuesScheduler(object):
         for _i in range(self.NQueues):
             self.queues.append([])
 
-    def name(self):
+    def name(self) -> str:
         return str(self.NQueues) + " Queues Scheduler"
 
     def __str__(self):
@@ -25,7 +26,7 @@ class MultipleQueuesScheduler(object):
 
         return display
 
-    def __len__(self):
+    def __len__(self) -> int:
         lenght = 0
 
         for i in range(self.NQueues):
@@ -33,17 +34,17 @@ class MultipleQueuesScheduler(object):
 
         return lenght
 
-    def isEmpty(self):
+    def isEmpty(self) -> bool:
         return len(self) == 0
 
-    def addReadyProcess(self, pid: int, processTable):
+    def addReadyProcess(self, pid: int, processTable) -> None:
         self.queues[processTable.getPriority(pid)].append(pid)
 
-    def changePriorityBlockedProcess(self, pid: int, processTable):
+    def changePriorityBlockedProcess(self, pid: int, processTable) -> None:
         if processTable.getPriority(pid) > 0:
             processTable.setPriority(pid, processTable.getPriority(pid) - 1)
 
-    def run(self, processor, processTable, diagnostics):
+    def run(self, processor, processTable, diagnostics) -> None:
 
         was_in_processor = []
         diagnostics.processesAdded += min(
