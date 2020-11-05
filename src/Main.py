@@ -117,35 +117,37 @@ def interactiveMode(time, processor, processTable, memory, InfiniteMemory, sched
 
 def runFile(time, processor, processTable, memory, InfiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
     while True:
-        inputNumber = int(input("Type a filenumber: "))
+        try:
+            inputNumber = int(input("Type a filenumber: "))
+            file = open("input/" + str(inputNumber) + ".txt")
+        except:
+            inputNumber = -1
         if inputNumber >= 0:
-            with open("input/" + str(inputNumber) + ".txt") as file:
 
-                for raw_line in file:
+            for raw_line in file:
 
-                    line = raw_line.strip()
+                line = raw_line.strip()
 
-                    if line == "U":
-                        time += 1
-                        processor.runInstructions(time, memory, InfiniteMemory, processTable,
-                                                  scheduler, blockedIOList, memoryManager, doneList, diagnostics)
-                        scheduler.run(processor, processTable, diagnostics)
-                        memoryManager.run(memory, processor,
-                                          scheduler, processTable)
+                if line == "U":
+                    time += 1
+                    processor.runInstructions(time, memory, InfiniteMemory, processTable,
+                                              scheduler, blockedIOList, memoryManager, doneList, diagnostics)
+                    scheduler.run(processor, processTable, diagnostics)
+                    memoryManager.run(memory, processor,
+                                      scheduler, processTable)
 
-                    elif line == "L":
-                        pid = blockedIOList.unqueue()
-                        scheduler.addReadyProcess(pid, processTable)
+                elif line == "L":
+                    pid = blockedIOList.unqueue()
+                    scheduler.addReadyProcess(pid, processTable)
 
-                    elif line == "I":
-                        clear_screen()
-                        print(simulator_state(processor, processTable, memory, InfiniteMemory,
-                                              scheduler, memoryManager, blockedIOList, doneList, diagnostics))
+                elif line == "I":
+                    clear_screen()
+                    print(simulator_state(processor, processTable, memory, InfiniteMemory,
+                                          scheduler, memoryManager, blockedIOList, doneList, diagnostics))
 
-                    elif line == "M":
-                        input("Press enter to continue ;")
-                        break
-        break
+                elif line == "M":
+                    input("Press enter to continue; ")
+                    return 0
 
 
 def setNumberOfProcessors(processor):

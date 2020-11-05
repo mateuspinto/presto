@@ -11,7 +11,7 @@ class InfiniteMemory(AbstractMemory):
     def __init__(self):
         self.memory = {}
 
-    def appendProcess(self, pid: int, numberOfVariables: int, processTable) -> int:
+    def appendProcess(self, pid: int, numberOfVariables: int, processTable, diagnostics) -> int:
         """
         Append a new process and return the memory offset (always zero).
         """

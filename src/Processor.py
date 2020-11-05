@@ -62,7 +62,7 @@ class Processor(object):
         """
 
         memory_index = memory.appendProcess(
-            pid, numberOfVariables, processTable)
+            pid, numberOfVariables, processTable, diagnostics)
 
         if memory_index < 0:  # Index -1 means the memory allocation failed
 

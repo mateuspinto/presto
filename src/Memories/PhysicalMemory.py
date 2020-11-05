@@ -87,19 +87,26 @@ class PhysicalMemory(AbstractMemory):
         else:
             return -1
 
-    def appendProcess(self, pid: int, numberOfVariables: int, processTable) -> int:
+    def appendProcess(self, pid: int, numberOfVariables: int, processTable, diagnostics) -> int:
         """
         Append a new process and return the memory offset.
         """
 
         if self.algorithm == 0:
             offset = self.firstFit(numberOfVariables)
+            diagnostics.mmNodesTraveled = offset
         elif self.algorithm == 1:
             offset = self.bestFit(numberOfVariables)
+            diagnostics.mmNodesTraveled = len(self.memory)
         elif self.algorithm == 2:
             offset = self.worstFit(numberOfVariables)
+            diagnostics.mmNodesTraveled = len(self.memory)
         else:
             offset = self.nextFit(numberOfVariables)
+            diagnostics.mmNodesTraveled = min(
+                len(self.memory), self.lastVisited)
+
+        diagnostics.mmFrags = len(self.getFits(1))
 
         if offset < 0:
             return -1
@@ -153,7 +160,7 @@ class PhysicalMemory(AbstractMemory):
     def moveToInfiniteMemory(self, pid: int, processTable, infiniteMemory):
         number_of_variables = processTable.getMemorySize(pid)
 
-        infiniteMemory.appendProcess(pid, number_of_variables, processTable)
+        infiniteMemory.appendProcess(pid, number_of_variables, processTable, None)
 
         for variable in range(number_of_variables):
             infiniteMemory.declare(pid, variable, processTable)

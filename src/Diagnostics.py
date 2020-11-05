@@ -13,6 +13,9 @@ class Diagnostics(object):
         self.mmAllocFailed = 0
         self.mmAllocSucess = 0
 
+        self.mmFrags = 0
+        self.mmNodesTraveled = 0
+
         self.N = 0
         self.D = 0
         self.V = 0
@@ -50,6 +53,8 @@ class Diagnostics(object):
             str(self.mmAllocSucess) + "\n"
         display += "Memory allocation failed: " + \
             str(self.mmAllocFailed) + "\n"
+        display += "External memory fragments: " + \
+            str(self.mmFrags) + "\n"
 
         return display
 
