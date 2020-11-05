@@ -291,7 +291,7 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
                 config_menu_title += SimulatorStatus(
                     processor, memory, scheduler)
                 config_menu_items = ["Set number of processors",
-                                     "Set process schedulers", "Set memory type", "Back to Main Menu"]
+                                     "Set process scheduler", "Set memory type", "Back to Main Menu"]
                 config_menu = TerminalMenu(config_menu_items,
                                            config_menu_title,
                                            main_menu_cursor,
