@@ -66,6 +66,7 @@ def ask_key_interactive_mode():
 
     return display
 
+
 def simulator_state(processor, processTable, memory, infMemory, scheduler, memoryManager, blockedByIOList, doneList, diagnostics):
     display = side_to_side_strings(
         [str(processTable), str(processor), str(infMemory), str(doneList)], 2)
@@ -206,7 +207,6 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
     main_menu_cursor = "> "
     main_menu_cursor_style = ("fg_red", "bold")
     main_menu_style = ("bg_red", "fg_yellow")
-    main_menu_exit = False
 
     main_menu = TerminalMenu(menu_entries=main_menu_items,
                              title=main_menu_title,
@@ -228,15 +228,17 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
                                cycle_cursor=True,
                                clear_screen=True)
 
-    while not main_menu_exit:
+    while True:
         main_sel = main_menu.show()
 
         if main_sel == 0:
             interactiveMode(time, processor, processTable, memory, InfiniteMemory,
                             scheduler, memoryManager, blockedIOList, doneList, diagnostics)
+            exit(0)
         elif main_sel == 1:
             runFile(time, processor, processTable, memory, InfiniteMemory,
                     scheduler, memoryManager, blockedIOList, doneList, diagnostics)
+            exit(0)
         elif main_sel == 2:
             config_menu_back = False
             while not config_menu_back:
@@ -250,8 +252,7 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
                     config_menu_back = True
                     print("Back Selected")
         elif main_sel == 3:
-            main_menu_exit = True
-            print("Quit Selected. Thank u <3")
+            exit(0)
 
 
 if __name__ == "__main__":
@@ -275,3 +276,5 @@ if __name__ == "__main__":
 
     main(time, processor, processTable, memory, InfiniteMemory,
          scheduler, memoryManager, blockedIOList, doneList, diagnostics)
+
+    print("Quit Selected. Thank u <3")
