@@ -111,7 +111,10 @@ class PhysicalMemory(object):
     def __str__(self):
         display = "[Physical Memory]\n"
 
-        for item in self.memory:
+        for number, item in enumerate(self.memory, 1):
+            if number == 20:
+                display += "\n"
+
             display += str(item).zfill(3) + " "
 
         return display

@@ -14,8 +14,7 @@ class Processor(object):
         return len(self.threads)
 
     def __str__(self):
-        display = "[Processor]\n"
-        display += "Core count = " + str(self.numberOfCores) + "\n"
+        display = "[" + str(self.numberOfCores) + "-Core-Processor]\n"
 
         display += "PID | TIM"
         for i in self.threads:
@@ -33,7 +32,7 @@ class Processor(object):
         self.threads.append(ProcessorEntry(pid))
 
     def appendPreferencialProcess(self, pid: int):
-        self.threads.insert(0,ProcessorEntry(pid))
+        self.threads.insert(0, ProcessorEntry(pid))
 
     def removeProcess(self, pid: int):
         self.threads.remove(pid)
@@ -59,7 +58,8 @@ class Processor(object):
         Alloc some memory for the process.
         """
 
-        memory_index = memory.appendProcess(pid, numberOfVariables, processTable)
+        memory_index = memory.appendProcess(
+            pid, numberOfVariables, processTable)
 
         if memory_index < 0:  # Index -1 means the memory allocation failed
 
@@ -104,7 +104,8 @@ class Processor(object):
         processTable.increasePC(pid)
         processTable.increaseCPUTime(pid)
 
-        memory.setValue(pid, variableNumber, memory.getValue(pid, variableNumber, processTable) + x, processTable)
+        memory.setValue(pid, variableNumber, memory.getValue(
+            pid, variableNumber, processTable) + x, processTable)
 
     @staticmethod
     def subValue(pid: int, variableNumber: int, x: int, memory, processTable):
@@ -112,7 +113,8 @@ class Processor(object):
         processTable.increasePC(pid)
         processTable.increaseCPUTime(pid)
 
-        memory.setValue(pid, variableNumber, memory.getValue(pid, variableNumber, processTable) - x, processTable)
+        memory.setValue(pid, variableNumber, memory.getValue(
+            pid, variableNumber, processTable) - x, processTable)
 
     def blockProcessByIO(self, pid: int, memory, processTable, scheduler, blockedIOList):
 
@@ -123,7 +125,7 @@ class Processor(object):
         blockedIOList.appendProcess(pid)
         scheduler.changePriorityBlockedProcess(pid, processTable)
 
-    def blockProcessByMemory(self, pid: int, numberOfVariables:int, processTable, scheduler, memoryManager):
+    def blockProcessByMemory(self, pid: int, numberOfVariables: int, processTable, scheduler, memoryManager):
         """
         Exception handler for non allocated memory
         """

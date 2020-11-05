@@ -69,16 +69,16 @@ def ask_key_interactive_mode():
 
 def simulator_state(processor, processTable, memory, infMemory, scheduler, memoryManager, blockedByIOList, doneList, diagnostics):
     display = side_to_side_strings(
-        [str(processTable), str(processor), str(infMemory), str(doneList)], 2)
-    display += "----------------------------------------------------------------------------------------------------------------------------------------------\n"
+        [str(processTable), str(processor), str(infMemory)], 2)
+    display += "---------------------------------------------------------------------------------------------------------------------\n"
     display += side_to_side_strings([str(memory)]) + "\n"
-    display += "----------------------------------------------------------------------------------------------------------------------------------------------\n"
+    display += "---------------------------------------------------------------------------------------------------------------------\n"
     display += side_to_side_strings([str(scheduler),
-                                     str(blockedByIOList), str(memoryManager)]) + "\n"
-    display += "----------------------------------------------------------------------------------------------------------------------------------------------\n"
+                                     str(blockedByIOList), str(memoryManager),  str(doneList)]) + "\n"
+    display += "---------------------------------------------------------------------------------------------------------------------\n"
     display += side_to_side_strings(
         [diagnostics.showInstructions(), str(diagnostics)])
-    display += "----------------------------------------------------------------------------------------------------------------------------------------------\n"
+    display += "---------------------------------------------------------------------------------------------------------------------\n"
 
     return display
 
@@ -103,8 +103,11 @@ def interactiveMode(time, processor, processTable, memory, InfiniteMemory, sched
             memoryManager.run(memory, processor, scheduler, processTable)
 
         elif typed_option == "L":
-            pid = blockedIOList.unqueue()
-            scheduler.addReadyProcess(pid, processTable)
+            try:
+                pid = blockedIOList.unqueue()
+                scheduler.addReadyProcess(pid, processTable)
+            except:
+                pass
 
         elif typed_option == "M":
             break
@@ -201,6 +204,48 @@ def setSchedulers(cursor, cursor_style, style):
     return scheduler
 
 
+def setAlgorithmFromPhysical(cursor, cursor_style, style):
+    algorithm_menu_title = "  Select the Physical memory algorithm\n"
+    algorithm_menu_items = ["First fit", "Best fit", "Worst fit", "Next fit"]
+    algorithm_menu = TerminalMenu(algorithm_menu_items,
+                                  algorithm_menu_title,
+                                  cursor,
+                                  cursor_style,
+                                  style,
+                                  cycle_cursor=True,
+                                  clear_screen=True)
+
+    return algorithm_menu.show()
+
+
+def setMemory(cursor, cursor_style, style):
+    memory_menu_title = "  Select the memory\n"
+    memory_menu_items = ["Infinite Memory", "Physical Memory"]
+    memory_menu = TerminalMenu(memory_menu_items,
+                               memory_menu_title,
+                               cursor,
+                               cursor_style,
+                               style,
+                               cycle_cursor=True,
+                               clear_screen=True)
+
+    memory_sel = memory_menu.show()
+    if memory_sel == 0:
+        memory = InfiniteMemory()
+    elif memory_sel == 1:
+        while True:
+            sizeMem = int(
+                input("Input size of physical memory in int variables (n>0): "))
+            if sizeMem > 0:
+                clear_screen()
+                break
+
+        alg = setAlgorithmFromPhysical(cursor, cursor_style, style)
+        memory = PhysicalMemory(sizeMem, alg)
+
+    return memory
+
+
 def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
     main_menu_title = "  Simple process simulator. By Daniel, Leandro and Mateus\n"
     main_menu_items = ["Interactive Mode", "Run file", "Config", "Quit"]
@@ -218,7 +263,7 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
 
     config_menu_title = "  Config menu\n"
     config_menu_items = ["Set number of processors",
-                         "Set process schedulers", "Back to Main Menu"]
+                         "Set process schedulers", "Set memory type", "Back to Main Menu"]
     config_menu_back = False
     config_menu = TerminalMenu(config_menu_items,
                                config_menu_title,
@@ -249,6 +294,9 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
                     scheduler = setSchedulers(main_menu_cursor,
                                               main_menu_cursor_style, main_menu_style)
                 elif config_sel == 2:
+                    memory = setMemory(
+                        main_menu_cursor, main_menu_cursor_style, main_menu_style)
+                elif config_sel == 3:
                     config_menu_back = True
                     print("Back Selected")
         elif main_sel == 3:

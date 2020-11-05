@@ -22,9 +22,6 @@ class InfiniteMemory(object):
         return 0
 
     def __str__(self):
-        if len(self.memory) == 0:
-            return ""
-
         display = "[Infinite Memory]\n"
 
         for key in sorted(self.memory):
