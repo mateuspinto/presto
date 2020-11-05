@@ -66,7 +66,7 @@ def ask_key_interactive_mode():
     return display
 
 
-def simulator_state(processor, processTable, memory, infMemory, scheduler, memoryManager, blockedByIOList, doneList, diagnostics):
+def simulator_state(processor, processTable, memory, infMemory, scheduler, memoryManager, blockedByIOList, doneList, diagnostics, time):
     display = side_to_side_strings(
         [str(processTable), str(processor), str(infMemory)], 2)
     display += "---------------------------------------------------------------------------------------------------------------------\n"
@@ -76,7 +76,7 @@ def simulator_state(processor, processTable, memory, infMemory, scheduler, memor
                                      str(blockedByIOList), str(memoryManager),  str(doneList)]) + "\n"
     display += "---------------------------------------------------------------------------------------------------------------------\n"
     display += side_to_side_strings(
-        [diagnostics.showInstructions(), str(diagnostics)])
+        [diagnostics.showInstructions(), str(diagnostics), "[Time]\nTime spent: " + str(time)])
     display += "---------------------------------------------------------------------------------------------------------------------\n"
 
     return display
@@ -86,7 +86,7 @@ def interactiveMode(time, processor, processTable, memory, InfiniteMemory, sched
     while True:
         clear_screen()
         print(simulator_state(processor, processTable, memory, InfiniteMemory,
-                              scheduler, memoryManager, blockedIOList, doneList, diagnostics))
+                              scheduler, memoryManager, blockedIOList, doneList, diagnostics, time))
         print(ask_key_interactive_mode(), end='')
 
         try:
@@ -143,7 +143,7 @@ def runFile(time, processor, processTable, memory, InfiniteMemory, scheduler, me
                 elif line == "I":
                     clear_screen()
                     print(simulator_state(processor, processTable, memory, InfiniteMemory,
-                                          scheduler, memoryManager, blockedIOList, doneList, diagnostics))
+                                          scheduler, memoryManager, blockedIOList, doneList, diagnostics, time))
 
                 elif line == "M":
                     input("Press enter to continue; ")
