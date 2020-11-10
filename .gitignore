@@ -152,4 +152,7 @@ dmypy.json
 !.vscode/extensions.json
 *.code-workspace
 
+### pdf ###
+*.pdf:Zone.Identifier
+
 # End of https://www.toptal.com/developers/gitignore/api/python,vscode
