@@ -82,10 +82,10 @@ def simulator_state(processor, processTable, memory, infMemory, scheduler, memor
     return display
 
 
-def interactiveMode(time, processor, processTable, memory, InfiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
+def interactiveMode(time, processor, processTable, memory, infiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
     while True:
         clear_screen()
-        print(simulator_state(processor, processTable, memory, InfiniteMemory,
+        print(simulator_state(processor, processTable, memory, infiniteMemory,
                               scheduler, memoryManager, blockedIOList, doneList, diagnostics, time))
         print(ask_key_interactive_mode(), end='')
 
@@ -96,7 +96,7 @@ def interactiveMode(time, processor, processTable, memory, InfiniteMemory, sched
 
         if typed_option == "U" or typed_option == "":
             time += 1
-            processor.runInstructions(time, memory, InfiniteMemory, processTable,
+            processor.runInstructions(time, memory, infiniteMemory, processTable,
                                       scheduler, blockedIOList, memoryManager, doneList, diagnostics)
             scheduler.run(processor, processTable, diagnostics)
             memoryManager.run(memory, processor, scheduler, processTable)
@@ -115,7 +115,7 @@ def interactiveMode(time, processor, processTable, memory, InfiniteMemory, sched
             pass
 
 
-def runFile(time, processor, processTable, memory, InfiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
+def runFile(time, processor, processTable, memory, infiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
     while True:
         try:
             inputNumber = int(input("Type a filenumber: "))
@@ -130,7 +130,7 @@ def runFile(time, processor, processTable, memory, InfiniteMemory, scheduler, me
 
                 if line == "U":
                     time += 1
-                    processor.runInstructions(time, memory, InfiniteMemory, processTable,
+                    processor.runInstructions(time, memory, infiniteMemory, processTable,
                                               scheduler, blockedIOList, memoryManager, doneList, diagnostics)
                     scheduler.run(processor, processTable, diagnostics)
                     memoryManager.run(memory, processor,
@@ -142,7 +142,7 @@ def runFile(time, processor, processTable, memory, InfiniteMemory, scheduler, me
 
                 elif line == "I":
                     clear_screen()
-                    print(simulator_state(processor, processTable, memory, InfiniteMemory,
+                    print(simulator_state(processor, processTable, memory, infiniteMemory,
                                           scheduler, memoryManager, blockedIOList, doneList, diagnostics, time))
 
                 elif line == "M":
@@ -256,7 +256,7 @@ def SimulatorStatus(processor, memory, scheduler):
     return display
 
 
-def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
+def main(time, processor, processTable, memory, infiniteMemory, scheduler, memoryManager, blockedIOList, doneList, diagnostics):
     while True:
         main_menu_title = "*** Simple process simulator Mk II ***\n"
         main_menu_title += "By Daniel, Leandro and Mateus\n\n"
@@ -277,11 +277,11 @@ def main(time, processor, processTable, memory, InfiniteMemory, scheduler, memor
         main_sel = main_menu.show()
 
         if main_sel == 0:
-            interactiveMode(time, processor, processTable, memory, InfiniteMemory,
+            interactiveMode(time, processor, processTable, memory, infiniteMemory,
                             scheduler, memoryManager, blockedIOList, doneList, diagnostics)
             return 0
         elif main_sel == 1:
-            runFile(time, processor, processTable, memory, InfiniteMemory,
+            runFile(time, processor, processTable, memory, infiniteMemory,
                     scheduler, memoryManager, blockedIOList, doneList, diagnostics)
             return 0
         elif main_sel == 2:
@@ -325,7 +325,7 @@ if __name__ == "__main__":
 
     processor = Processor(3)
     memory = InfiniteMemory()
-    InfiniteMemory = InfiniteMemory()
+    infiniteMemory = InfiniteMemory()
     scheduler = MultipleQueuesScheduler()
 
     # Putting first process in processTable and processor (running list)
@@ -334,7 +334,7 @@ if __name__ == "__main__":
 
     time: int = 0
 
-    main(time, processor, processTable, memory, InfiniteMemory,
+    main(time, processor, processTable, memory, infiniteMemory,
          scheduler, memoryManager, blockedIOList, doneList, diagnostics)
 
     print("Quit Selected. Thank u <3")
