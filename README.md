@@ -29,4 +29,4 @@ PRESTO is a simulator for scheduling processes and physical memory made in Pytho
  - Next fit
 
 ## References
-Todos os algoritmos foram baseados no livro "Sistemas operacionais modernos - Tanenbaum".
+All algorithms were based on the book "Modern operating systems - Tanenbaum".
